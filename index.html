@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikkkuuuu Secure Portal</title>
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#00ff9d;
+  font-family: monospace;
+  padding:20px;
+}
+.terminal{
+  max-width:800px;
+  margin:auto;
+}
+button{
+  background:#00ff9d;
+  border:none;
+  padding:12px;
+  font-weight:bold;
+  margin-top:15px;
+  cursor:pointer;
+  width:100%;
+}
+button:hover{
+  background:#00cc7a;
+}
+@media(max-width:600px){
+  body{font-size:14px;}
+}
+</style>
+</head>
+
+<body>
+<div class="terminal" id="terminal">
+
+<p>Weston-FW-01# show running-config | include love</p>
+<p>ip access-list extended MY-HEART</p>
+<p> permit tcp host Nikkkuuuu any eq 443</p>
+<p> deny   ip any any</p>
+
+<br>
+
+<p>ISE-01# show authentication status</p>
+<p> Username: Nikkkuuuu</p>
+<p> Result: <span style="color:#00ff9d">AUTHORIZED</span></p>
+
+<br>
+
+<p>VPN-GW# show crypto isakmp sa</p>
+<p> Tunnel Status: <span style="color:#00ff9d">UP</span></p>
+<p> Encryption: AES-FOREVER</p>
+
+<br>
+
+<p>SIEM Alert ⚠️</p>
+<p>Severity: CRITICAL</p>
+<p>Description: Excessive heartbeat detected near Nikkkuuuu.</p>
+
+<br>
+
+<p>Nessus Scan Report:</p>
+<p> Vulnerabilities Found: 0</p>
+<p> Risk Level: SAFE TO LOVE</p>
+
+<br>
+
+<p><b>System Query:</b> Will you be my Valentine, Nikkkuuuu? 💘</p>
+
+<button onclick="accept()">ALLOW & COMMIT 💚</button>
+<button onclick="deny()">DENY (blocked by firewall 😏)</button>
+
+</div>
+
+<script>
+function accept(){
+document.getElementById("terminal").innerHTML =
+`
+<p>Applying configuration...</p>
+<p>Commit complete.</p>
+<p>Relationship Status: PRODUCTION 🚀</p>
+<p>High Availability: ENABLED</p>
+<p>Failover: NEVER</p>
+<br>
+<p style="font-size:18px;"><b>I love you, my forever Valentine, Nikkkuuuu 💖</b></p>
+`;
+}
+
+function deny(){
+document.getElementById("terminal").innerHTML +=
+`<p style="color:red;">Access Denied.</p>
+<p>Reason: Policy forces ALLOW 😂</p>`;
+}
+</script>
+
+</body>
+</html>
