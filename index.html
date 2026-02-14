@@ -1,15 +1,22 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yuki.co • Incident Console</title>
+
+  <!-- reduce GitHub Pages caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <style>
     :root{
-      --bg1:#08101f;
-      --bg2:#091a2f;
+      --bg1:#071427;
+      --bg2:#0a1b32;
       --glass: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.16);
+      --stroke: rgba(255,255,255,.18);
       --shadow: 0 18px 70px rgba(0,0,0,.48);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
@@ -17,6 +24,8 @@
       --yellow:#ffd86b;
       --red:#ff5c7a;
       --blue:#7dd3fc;
+      --pink:#ff4f87;
+      --pink2:#ff77a6;
     }
 
     *{box-sizing:border-box}
@@ -27,28 +36,31 @@
       color:var(--text);
       overflow:hidden;
       background:
-        radial-gradient(1200px 700px at 70% 10%, rgba(125,211,252,.18), transparent 60%),
-        radial-gradient(1100px 700px at 20% 20%, rgba(0,255,157,.14), transparent 60%),
+        radial-gradient(1200px 700px at 70% 10%, rgba(125,211,252,.16), transparent 60%),
+        radial-gradient(1100px 700px at 20% 20%, rgba(0,255,157,.12), transparent 60%),
         radial-gradient(900px 700px at 50% 90%, rgba(255,92,122,.14), transparent 60%),
         linear-gradient(135deg, var(--bg1), var(--bg2));
     }
 
-    /* Hearts wallpaper + big watermark */
+    /* Wallpaper hearts + watermark */
     .wallpaper{
       position:fixed; inset:0;
       pointer-events:none;
       background:
-        radial-gradient(900px 520px at 50% 20%, rgba(255,92,122,.10), transparent 60%),
-        radial-gradient(900px 520px at 35% 75%, rgba(255,216,107,.07), transparent 60%),
+        radial-gradient(900px 520px at 55% 25%, rgba(255,92,122,.12), transparent 60%),
+        radial-gradient(900px 520px at 35% 80%, rgba(255,216,107,.07), transparent 60%),
         radial-gradient(900px 520px at 75% 70%, rgba(125,211,252,.06), transparent 60%);
+      opacity:.95;
+      z-index:0;
     }
     .wallpaper::before{
       content:"";
-      position:absolute; inset:-160px;
+      position:absolute; inset:-200px;
       background:
-        radial-gradient(circle at 20% 25%, rgba(255,92,122,.22) 0 2px, transparent 3px) 0 0/90px 90px,
-        radial-gradient(circle at 65% 70%, rgba(255,216,107,.18) 0 2px, transparent 3px) 0 0/110px 110px;
-      opacity:.9;
+        radial-gradient(circle at 18% 22%, rgba(255,92,122,.25) 0 2px, transparent 3px) 0 0/88px 88px,
+        radial-gradient(circle at 75% 44%, rgba(255,216,107,.18) 0 2px, transparent 3px) 0 0/112px 112px,
+        radial-gradient(circle at 42% 78%, rgba(255,255,255,.10) 0 2px, transparent 3px) 0 0/126px 126px;
+      opacity:.7;
       animation: drift 12s ease-in-out infinite alternate;
     }
     @keyframes drift{
@@ -63,23 +75,17 @@
       opacity:.12;
       font-weight:900;
       letter-spacing:.06em;
-      font-size: clamp(56px, 10vw, 140px);
+      font-size: clamp(56px, 10vw, 150px);
       text-transform:uppercase;
       color:rgba(255,255,255,.86);
       text-shadow: 0 18px 60px rgba(0,0,0,.35);
       mix-blend-mode: overlay;
-    }
-    .watermark small{
-      display:block;
-      font-size: clamp(14px, 2vw, 22px);
-      letter-spacing:.22em;
-      opacity:.8;
-      margin-top:10px;
-      text-align:center;
+      user-select:none;
+      z-index:1;
     }
 
-    /* Desktop chrome */
-    .desktop{ position:relative; height:100%; padding:18px; }
+    .desktop{ position:relative; height:100%; padding:18px; z-index:2; }
+
     .brand{
       position:absolute; left:18px; top:14px;
       display:flex; align-items:center; gap:10px;
@@ -90,7 +96,7 @@
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
       user-select:none;
-      z-index:3;
+      z-index:5;
     }
     .brand .logo{
       width:34px; height:34px; border-radius:12px;
@@ -102,10 +108,7 @@
       border:1px solid rgba(255,255,255,.18);
     }
     .brand .name{ font-weight:900; letter-spacing:.02em; line-height:1.05; }
-    .brand .sub{
-      font-size:12px; color:var(--muted);
-      letter-spacing:.06em; text-transform:uppercase;
-    }
+    .brand .sub{ font-size:12px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
 
     .taskbar{
       position:absolute; left:50%; bottom:14px;
@@ -122,7 +125,7 @@
       justify-content:center;
       gap:12px;
       padding:10px 14px;
-      z-index:3;
+      z-index:5;
     }
     .tbIcon{
       width:36px; height:36px;
@@ -132,7 +135,6 @@
       display:grid; place-items:center;
       user-select:none;
     }
-    .tbIcon svg{opacity:.92}
     .tbSep{width:1px; height:28px; background: rgba(255,255,255,.14); margin:0 4px}
 
     /* Outlook toast */
@@ -152,7 +154,7 @@
       transform: translateY(24px);
       opacity:0;
       animation: toastIn .55s ease forwards;
-      z-index:4;
+      z-index:9999;
     }
     @keyframes toastIn{ to{ transform:translateY(0); opacity:1; } }
     .toastRow{display:flex; gap:10px; align-items:flex-start}
@@ -163,11 +165,11 @@
       display:grid; place-items:center;
       flex:0 0 auto;
     }
-    .toastTitle{ font-weight:900; margin:0; font-size:14px; line-height:1.2; }
+    .toastTitle{ font-weight:900; margin:0; font-size:14px; }
     .toastMeta{ margin:2px 0 0 0; color:var(--muted); font-size:12px; line-height:1.35; }
     .toastHint{
       margin:8px 0 0 0;
-      color:rgba(255,255,255,.80);
+      color:rgba(255,255,255,.84);
       font-size:12px;
       padding:6px 10px;
       border-radius:999px;
@@ -176,12 +178,12 @@
       display:inline-block;
     }
 
-    /* Outlook mail window */
+    /* Mail overlay */
     .overlay{
       position:absolute; inset:0;
       background: rgba(0,0,0,.35);
       display:none;
-      z-index:20;
+      z-index:50;
     }
     .mailWin{
       position:absolute;
@@ -206,22 +208,13 @@
     .winDots{display:flex; gap:8px; align-items:center}
     .winDot{width:10px;height:10px;border-radius:50%}
     .winDot.r{background:var(--red)} .winDot.y{background:var(--yellow)} .winDot.g{background:var(--green)}
-    .winTitle{
-      font-weight:800;
-      font-size:13px;
-      color:rgba(255,255,255,.85);
-      display:flex; align-items:center; gap:8px;
-    }
+    .winTitle{ font-weight:900; font-size:13px; color:rgba(255,255,255,.88); display:flex; gap:10px; align-items:center;}
     .pill{
-      font-size:11px;
-      padding:4px 8px;
-      border-radius:999px;
+      font-size:11px; padding:4px 8px; border-radius:999px;
       border:1px solid rgba(255,216,107,.25);
       background: rgba(255,216,107,.10);
       color: rgba(255,216,107,.95);
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+      font-weight:900; letter-spacing:.05em; text-transform:uppercase;
     }
     .closeBtn{
       width:36px; height:30px;
@@ -231,145 +224,169 @@
       color:rgba(255,255,255,.85);
       cursor:pointer;
     }
-    .closeBtn:hover{background: rgba(255,92,122,.18); border-color: rgba(255,92,122,.28)}
-    .mailBody{
-      display:grid;
-      grid-template-columns: 260px 1fr;
-      height: calc(100% - 46px);
-    }
-    @media(max-width:860px){ .mailBody{grid-template-columns: 1fr} .leftPane{display:none} }
-    .leftPane{
-      border-right:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.10);
-      padding:10px;
-    }
+    .mailBody{ display:grid; grid-template-columns: 260px 1fr; height: calc(100% - 46px); }
+    @media(max-width:860px){ .mailBody{grid-template-columns:1fr} .leftPane{display:none} }
+    .leftPane{ border-right:1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.10); padding:10px; }
     .folder{
-      padding:10px 10px;
-      border-radius:12px;
+      padding:10px; border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      margin-bottom:10px;
-      color:rgba(255,255,255,.78);
-      font-size:13px;
-      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px; font-size:13px;
+      display:flex; justify-content:space-between; align-items:center;
     }
-    .folder b{color:rgba(255,255,255,.92)}
     .mailPane{ padding:14px; overflow:auto; }
-    .mailHdr{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
-    .mailSubj{ margin:0; font-weight:900; letter-spacing:.01em; font-size:18px; line-height:1.2; }
+    .mailSubj{ margin:0; font-weight:950; font-size:18px; }
     .mailFrom{ margin:6px 0 0 0; color:var(--muted); font-size:13px; line-height:1.4; }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color:rgba(255,255,255,.82);
-      font-size:12px;
-      white-space:nowrap;
-    }
     .kv{
-      margin-top:10px;
-      border-radius:16px;
+      margin-top:10px; border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.16);
-      padding:12px;
-      font-size:13px;
-      color:rgba(255,255,255,.80);
+      padding:12px; font-size:13px; color:rgba(255,255,255,.82);
       line-height:1.55;
-    }
-    .kv b{color:rgba(255,255,255,.92)}
-    .assignRow{
-      margin-top:14px;
-      display:flex; flex-wrap:wrap; gap:10px;
-      align-items:center;
-      position:relative;
-      min-height:86px;
     }
     .btn{
       padding:12px 14px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.08);
-      color:rgba(255,255,255,.90);
+      color:rgba(255,255,255,.92);
       cursor:pointer;
       font-weight:900;
-      letter-spacing:.01em;
     }
-    .btn:hover{background: rgba(255,255,255,.12)}
     .btnYes{
       border-color: rgba(0,255,157,.30);
       background: rgba(0,255,157,.14);
       color: rgba(0,255,157,.95);
     }
-
-    /* NO teleports across the whole mail window area (hard to click) */
+    .assignRow{ position:relative; min-height:92px; margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .noBtn{
       position:absolute;
-      left:340px;
-      top: 14px;
+      left:320px; top:10px;
       width:180px;
       border-color: rgba(255,92,122,.40);
       background: rgba(255,92,122,.10);
       color: rgba(255,92,122,.95);
-      transition: transform .10s ease;
       z-index:5;
     }
-    @media(max-width:860px){
-      .noBtn{ left: 220px; }
-    }
-    .attempts{ margin-left:auto; color:rgba(255,255,255,.65); font-size:12px; }
+    .attempts{ margin-left:auto; color:rgba(255,255,255,.70); font-size:12px; }
 
-    /* Terminal window */
+    /* Teams-style chat (Yuki) */
+    .chatOverlay{
+      position:absolute; inset:0;
+      display:none;
+      background: rgba(0,0,0,.18);
+      z-index:80;
+      pointer-events:none;
+    }
+    .chatToast{
+      position:absolute;
+      right:18px;
+      top:80px;
+      width:min(360px, calc(100% - 36px));
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(25,25,35,.55);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      pointer-events:auto;
+    }
+    .chatHead{
+      display:flex; gap:10px; align-items:center;
+      padding:12px 12px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .avatar{
+      width:38px; height:38px; border-radius:14px;
+      display:grid; place-items:center;
+      font-weight:950;
+      background: rgba(255,79,135,.18);
+      border:1px solid rgba(255,79,135,.25);
+    }
+    .chatTitle{ font-weight:950; }
+    .chatSub{ font-size:12px; opacity:.75; margin-top:2px; }
+    .chatBody{ padding:12px; }
+    .bubble{
+      max-width:92%;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      margin:0 0 10px 0;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .typing{
+      display:inline-flex; gap:5px; align-items:center;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      margin:0 0 10px 0;
+    }
+    .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.75);animation: bounce .9s infinite}
+    .dot:nth-child(2){animation-delay:.12s}
+    .dot:nth-child(3){animation-delay:.24s}
+    @keyframes bounce{ 0%,80%,100%{transform:translateY(0);opacity:.55} 40%{transform:translateY(-4px);opacity:1} }
+    .chatClose{
+      margin-left:auto;
+      width:34px;height:30px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color:rgba(255,255,255,.85);
+      cursor:pointer;
+    }
+
+    /* Terminal */
     .termWin{
       position:absolute;
-      left:50%;
-      top:50%;
+      left:50%; top:52%;
       transform:translate(-50%,-50%);
-      width:min(980px, calc(100% - 28px));
-      height:min(640px, calc(100% - 130px));
-      border-radius:18px;
+      width:min(1040px, calc(100% - 28px));
+      height:min(680px, calc(100% - 130px));
+      border-radius:22px;
       border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,.26);
+      backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
       display:none;
-      z-index:15;
+      z-index:70;
       overflow:hidden;
     }
     .termHead{
-      height:46px;
+      height:50px;
       display:flex; align-items:center; justify-content:space-between;
-      padding:0 12px;
+      padding:0 14px;
       border-bottom:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.07);
     }
     .termHead .left{
       display:flex; align-items:center; gap:10px;
-      color:rgba(255,255,255,.80);
-      font-size:13px;
-      font-weight:800;
+      font-size:13px; font-weight:900;
+      color:rgba(255,255,255,.86);
     }
     .termHead .right{
       display:flex; align-items:center; gap:10px;
-      color:rgba(255,255,255,.65);
-      font-size:12px;
+      z-index:3;
     }
-    .hintBtn{
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid rgba(125,211,252,.28);
-      background: rgba(125,211,252,.10);
-      color: rgba(199,241,255,.95);
+    .hintBtnTop{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
       cursor:pointer;
-      font-weight:900;
-      font-size:12px;
+      font-weight:950;
+      letter-spacing:.01em;
     }
-    .hintBtn:hover{background: rgba(125,211,252,.14)}
+    .hintBtnTop:hover{ background: rgba(255,255,255,.14); }
     .screen{
-      padding:14px 14px 6px;
+      padding:16px 16px 8px;
       overflow:auto;
-      height: calc(100% - 64px);
+      height: calc(100% - 70px);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       font-size:14px;
       line-height:1.55;
@@ -383,130 +400,137 @@
     .tBad{color: var(--red)}
     .tInfo{color: var(--blue)}
     .tCmd{color: rgba(255,255,255,.92)}
+
     .inputBar{
       display:flex; gap:10px;
       align-items:center;
       padding:10px 12px;
       border-top:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      height:64px;
+      height:70px;
     }
     .cmdInput{
       flex:1;
-      border-radius:14px;
+      border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.22);
       color: rgba(184,255,217,.95);
-      padding:12px 12px;
+      padding:14px 14px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       font-size:14px;
       outline:none;
     }
     .cmdInput::placeholder{color: rgba(184,255,217,.45)}
+
     .runBtn{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(0,255,157,.28);
-      background: rgba(0,255,157,.12);
-      color: rgba(0,255,157,.95);
+      padding:14px 16px;
+      border-radius:16px;
+      border:0;
+      background: linear-gradient(135deg, rgba(0,255,157,.22), rgba(125,211,252,.16));
+      color: rgba(255,255,255,.95);
       cursor:pointer;
-      font-weight:900;
-      letter-spacing:.01em;
+      font-weight:950;
+      letter-spacing:.02em;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      min-width:88px;
     }
-    .runBtn:hover{background: rgba(0,255,157,.16)}
+    .runBtn:hover{ filter: brightness(1.08); }
+    .hintBtnRow{
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.95);
+      cursor:pointer;
+      font-weight:950;
+      min-width:96px;
+    }
+    .hintBtnRow:hover{ background: rgba(255,255,255,.14); }
+
     .hintPanel{
       position:absolute;
-      right:12px;
-      top:58px;
-      width:min(380px, calc(100% - 24px));
-      border-radius:16px;
-      border:1px solid rgba(125,211,252,.26);
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(12px);
+      right:14px;
+      top:60px;
+      width:min(420px, calc(100% - 28px));
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.38);
+      backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
-      padding:12px;
+      padding:14px;
       display:none;
-      z-index:30;
+      z-index:999;
     }
     .hintPanel h4{
-      margin:0 0 6px 0;
+      margin:0 0 8px 0;
       font-size:12px;
-      letter-spacing:.10em;
+      letter-spacing:.14em;
       text-transform:uppercase;
-      color: rgba(199,241,255,.90);
+      color: rgba(255,255,255,.86);
     }
     .hintPanel p{
       margin:0;
       font-size:13px;
-      color: rgba(199,241,255,.84);
+      color: rgba(255,255,255,.86);
       line-height:1.45;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
 
-    /* Cinematic ending */
+    /* Ending */
     .ending{
       position:absolute; inset:0;
       display:none;
-      z-index:50;
+      z-index:200;
       overflow:hidden;
       background:
-        radial-gradient(900px 520px at 55% 25%, rgba(255,92,122,.22), transparent 60%),
-        radial-gradient(900px 520px at 35% 80%, rgba(255,216,107,.12), transparent 60%),
-        radial-gradient(900px 520px at 75% 70%, rgba(125,211,252,.10), transparent 60%),
-        #000;
+        radial-gradient(1100px 700px at 50% 30%, rgba(255,119,166,.34), transparent 60%),
+        radial-gradient(900px 640px at 30% 80%, rgba(255,79,135,.26), transparent 60%),
+        linear-gradient(135deg, #240512, #12020a);
     }
-    .heartsFloat{
-      position:absolute; inset:-20px;
-      pointer-events:none;
-      opacity:.85;
+    .endHearts{
+      position:absolute; inset:-30px;
       background:
-        radial-gradient(circle at 12% 18%, rgba(255,92,122,.35) 0 2px, transparent 3px) 0 0/70px 70px,
-        radial-gradient(circle at 82% 42%, rgba(255,216,107,.20) 0 2px, transparent 3px) 0 0/90px 90px,
-        radial-gradient(circle at 40% 76%, rgba(255,255,255,.12) 0 2px, transparent 3px) 0 0/110px 110px;
-      animation: drift2 10s ease-in-out infinite alternate;
-      filter: blur(.1px);
+        radial-gradient(circle at 12% 18%, rgba(255,92,122,.46) 0 2px, transparent 3px) 0 0/64px 64px,
+        radial-gradient(circle at 82% 42%, rgba(255,255,255,.18) 0 2px, transparent 3px) 0 0/110px 110px;
+      opacity:.9;
+      animation: driftEnd 10s ease-in-out infinite alternate;
+      filter: blur(.15px);
     }
-    @keyframes drift2{
+    @keyframes driftEnd{
       from{ transform: translate3d(-10px, -8px, 0) }
       to{ transform: translate3d(10px, 8px, 0) }
     }
-
-    .sil{
+    .endStage{
       position:absolute;
-      left:50%; top:58%;
+      left:50%;
+      top:54%;
       transform: translate(-50%,-50%);
-      width:min(980px, 95vw);
+      width:min(1100px, 96vw);
       opacity:0;
-      animation: silIn 1.2s ease .6s forwards;
-      filter: drop-shadow(0 18px 50px rgba(0,0,0,.55));
+      animation: endIn 1s ease .4s forwards;
+      filter: drop-shadow(0 18px 60px rgba(0,0,0,.55));
     }
-    @keyframes silIn{ to{opacity:1} }
-
-    .runGroup{ animation: runAcross 4.0s ease-in-out 1.0s forwards; }
-    @keyframes runAcross{
-      0%{ transform: translateX(-380px) }
-      100%{ transform: translateX(120px) }
-    }
-
-    .kiss{ opacity:0; animation: kissIn 1.0s ease 4.2s forwards; }
-    @keyframes kissIn{ to{opacity:1} }
-
+    @keyframes endIn{ to{opacity:1} }
+    .walker{ animation: walkTo 4s ease-in-out 1s forwards; }
+    @keyframes walkTo{ 0%{ transform: translateX(-340px) } 100%{ transform: translateX(0px) } }
+    .kissGroup{ opacity:0; animation: kissOn 1.1s ease 4.25s forwards; }
+    @keyframes kissOn{ to{opacity:1} }
     .finalText{
       position:absolute;
       left:50%;
-      bottom:10%;
+      bottom:9%;
       transform:translateX(-50%);
-      color: rgba(255,255,255,.92);
+      color: rgba(255,255,255,.94);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       font-size:16px;
       letter-spacing:.02em;
       text-align:center;
       opacity:0;
-      animation: textIn 1.1s ease 3.0s forwards;
+      animation: textIn 1.1s ease 2.6s forwards;
       padding:10px 14px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.20);
       backdrop-filter: blur(10px);
     }
     @keyframes textIn{ to{opacity:1} }
@@ -514,10 +538,7 @@
 </head>
 <body>
   <div class="wallpaper"></div>
-  <div class="watermark">
-    YUKI.CO
-    <small>Secure Love Delivery • NOC</small>
-  </div>
+  <div class="watermark">YUKI.CO</div>
 
   <div class="desktop">
     <div class="brand">
@@ -529,63 +550,33 @@
     </div>
 
     <div class="taskbar" aria-hidden="true">
-      <div class="tbIcon" title="Start">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M3 3h8v8H3V3Zm10 0h8v8h-8V3ZM3 13h8v8H3v-8Zm10 0h8v8h-8v-8Z" stroke="rgba(255,255,255,.86)" stroke-width="1.7"/>
-        </svg>
-      </div>
-      <div class="tbIcon" title="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="rgba(255,255,255,.86)" stroke-width="1.7"/>
-          <path d="M16.8 16.8 21 21" stroke="rgba(255,255,255,.86)" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="tbIcon" title="Outlook">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M4 7.5h12.5v11H4v-11Z" stroke="rgba(255,255,255,.86)" stroke-width="1.7"/>
-          <path d="M16.5 9 20 7.5v11l-3.5-1.5V9Z" stroke="rgba(255,255,255,.86)" stroke-width="1.7"/>
-          <path d="M4 8l6.25 5L16.5 8" stroke="rgba(255,255,255,.86)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+      <div class="tbIcon" title="Start"></div>
+      <div class="tbIcon" title="Search"></div>
+      <div class="tbIcon" title="Outlook"></div>
       <div class="tbSep"></div>
-      <div class="tbIcon" title="Terminal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M4 6h16v12H4V6Z" stroke="rgba(255,255,255,.86)" stroke-width="1.7"/>
-          <path d="M7 9l3 3-3 3" stroke="rgba(255,255,255,.86)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 15h5" stroke="rgba(255,255,255,.86)" stroke-width="1.7" stroke-linecap="round"/>
-        </svg>
-      </div>
+      <div class="tbIcon" title="Terminal"></div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast" role="button" tabindex="0" aria-label="New incident email notification">
+    <!-- Outlook toast -->
+    <div class="toast" id="toast" role="button" tabindex="0">
       <div class="toastRow">
-        <div class="toastIcon" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M4 7h16v10H4V7Z" stroke="rgba(255,255,255,.90)" stroke-width="1.7"/>
-            <path d="M4 8l8 6 8-6" stroke="rgba(255,255,255,.90)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="toastIcon" aria-hidden="true"></div>
         <div>
           <p class="toastTitle">Outlook • New incident</p>
-          <p class="toastMeta">
-            <b>P1:</b> Traffic from <b>Nikkkuuuu</b> to <b>Siva</b> is <b>NOT REACHABLE</b> (TCP/443) — click to open.
-          </p>
-          <span class="toastHint">Click to open email (enables sound)</span>
+          <p class="toastMeta"><b>P1:</b> Traffic from <b>Nikkkuuuu</b> to <b>Siva</b> is <b>NOT REACHABLE</b> (TCP/443).</p>
+          <span class="toastHint">Click to open email</span>
         </div>
       </div>
     </div>
 
-    <!-- Outlook overlay -->
+    <!-- Outlook mail -->
     <div class="overlay" id="overlay" aria-hidden="true">
-      <div class="mailWin" role="dialog" aria-modal="true" aria-label="Outlook email">
+      <div class="mailWin" role="dialog" aria-modal="true">
         <div class="winHead">
           <div class="winDots" aria-hidden="true">
             <span class="winDot r"></span><span class="winDot y"></span><span class="winDot g"></span>
           </div>
-          <div class="winTitle">
-            Outlook — Incident Mail <span class="pill">P1</span>
-          </div>
+          <div class="winTitle">Outlook — Incident Mail <span class="pill">P1</span></div>
           <button class="closeBtn" id="closeMail" title="Close">✕</button>
         </div>
 
@@ -595,29 +586,23 @@
             <div class="folder"><span>Incidents</span><b>1</b></div>
             <div class="folder"><span>Sent</span><b>0</b></div>
             <div class="folder"><span>Drafts</span><b>0</b></div>
-            <div class="folder"><span>Archive</span><b>0</b></div>
           </div>
 
           <div class="mailPane">
-            <div class="mailHdr">
-              <div>
-                <h2 class="mailSubj">INCIDENT: Traffic not reachable (Nikkkuuuu → Siva)</h2>
-                <p class="mailFrom">
-                  From: <b>noc@yuki.co</b><br/>
-                  To: <b>Nikkkuuuu</b><br/>
-                  Time: <b id="mailTime"></b>
-                </p>
-              </div>
-              <div class="chip">Impact: Heartbeat latency rising • SLA breach risk</div>
-            </div>
+            <h2 class="mailSubj">INCIDENT: Traffic not reachable (Nikkkuuuu → Siva)</h2>
+            <p class="mailFrom">
+              From: <b>noc@yuki.co</b><br/>
+              To: <b>Nikkkuuuu</b><br/>
+              Time: <b id="mailTime"></b>
+            </p>
 
             <div class="kv">
               <div><b>Incident ID:</b> VAL-0214</div>
-              <div><b>Source:</b> 10.214.0.10 (NIKK)</div>
-              <div><b>Destination:</b> 10.13.0.7 (SIVA)</div>
+              <div><b>Source:</b> 10.214.0.10</div>
+              <div><b>Destination:</b> 10.13.0.7</div>
               <div><b>Service:</b> TCP/443</div>
-              <div><b>Suspected path:</b> Switch → Firewall → ISE → VPN</div>
-              <div style="margin-top:8px"><b>Request:</b> Assign this ticket to your name to start troubleshooting.</div>
+              <div><b>Path:</b> Switch → Firewall → ISE → VPN</div>
+              <div style="margin-top:10px"><b>Request:</b> Assign this ticket to your name.</div>
             </div>
 
             <div class="assignRow" id="assignArea">
@@ -626,27 +611,38 @@
               <div class="attempts" id="attempts"></div>
             </div>
 
-            <div class="kv" style="margin-top:12px; color:rgba(255,255,255,.78)">
-              <b>Note:</b> “No” will attempt to escape. After 5 tries it disappears.
-            </div>
+            <div class="kv"><b>Rule:</b> “No” will run away. Catch it 5 times to remove it.</div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Teams-style chat (Yuki) -->
+    <div class="chatOverlay" id="chatOverlay" aria-hidden="true">
+      <div class="chatToast">
+        <div class="chatHead">
+          <div class="avatar">Y</div>
+          <div>
+            <div class="chatTitle">Yuki</div>
+            <div class="chatSub">Microsoft Teams</div>
+          </div>
+          <button class="chatClose" id="chatClose">✕</button>
+        </div>
+        <div class="chatBody" id="chatBody"></div>
+      </div>
+    </div>
+
     <!-- Terminal -->
-    <div class="termWin" id="termWin" role="dialog" aria-modal="true" aria-label="Incident terminal">
+    <div class="termWin" id="termWin" role="dialog" aria-modal="true">
       <div class="termHead">
         <div class="left">
-          <span style="display:inline-flex; gap:8px; align-items:center">
-            <span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span>
-            Yuki.co Incident Console
-          </span>
-          <span style="color:rgba(255,255,255,.65); font-weight:700" id="devLabel">• WAITING</span>
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block"></span>
+          Yuki.co Incident Console
+          <span style="color:rgba(255,255,255,.65);font-weight:800" id="devLabel">• WAITING</span>
         </div>
         <div class="right">
-          <button class="hintBtn" id="hintBtn">Hints</button>
-          <span id="soundStatus">🔇 Sound</span>
+          <button class="hintBtnTop" id="hintBtnTop">💡 Hints</button>
+          <span id="soundStatus" style="color:rgba(255,255,255,.75);font-weight:800">🔇 Sound</span>
         </div>
       </div>
 
@@ -656,92 +652,75 @@
       </div>
 
       <div class="screen" id="screen"></div>
+
       <div class="inputBar">
         <input class="cmdInput" id="cmdInput" placeholder="Type a command… (press Enter)" autocomplete="off" />
+        <button class="hintBtnRow" id="hintBtnRow">Hints</button>
         <button class="runBtn" id="runBtn">Run</button>
       </div>
     </div>
 
     <!-- Ending -->
     <div class="ending" id="ending" aria-hidden="true">
-      <div class="heartsFloat"></div>
+      <div class="endHearts"></div>
 
-      <svg class="sil" viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <!-- ground -->
-        <path d="M70 340 C 260 320, 380 360, 560 340 C 740 320, 900 370, 1130 340"
-              stroke="rgba(255,255,255,.18)" stroke-width="6" stroke-linecap="round"/>
+      <svg class="endStage" viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80 330 C 280 310, 390 350, 600 330 C 820 310, 960 360, 1120 330"
+              stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linecap="round"/>
 
-        <!-- couple (right) -->
-        <g class="kiss" opacity="0.96">
-          <!-- woman -->
-          <circle cx="940" cy="200" r="20" fill="rgba(255,255,255,.92)"/>
-          <path d="M928 220 C 922 262, 915 290, 900 330 C 890 356, 918 366, 930 338
-                   C 942 312, 948 286, 950 262
-                   C 954 286, 962 312, 974 338
-                   C 986 366, 1014 356, 1004 330
-                   C 989 290, 982 262, 976 220 Z"
-                fill="rgba(255,255,255,.92)"/>
-          <!-- man standing (already there waiting) -->
-          <circle cx="1015" cy="196" r="20" fill="rgba(255,255,255,.92)"/>
-          <path d="M1002 216 C 997 258, 990 288, 976 328 C 966 354, 994 364, 1006 336
-                   C 1018 310, 1024 284, 1026 260
-                   C 1030 284, 1038 310, 1050 336
-                   C 1062 364, 1090 354, 1080 328
-                   C 1066 288, 1059 258, 1054 216 Z"
-                fill="rgba(255,255,255,.92)"/>
-          <!-- hug/kiss lines -->
-          <path d="M972 238 C 990 228, 1002 222, 1016 220" stroke="rgba(255,255,255,.74)" stroke-width="10" stroke-linecap="round"/>
-          <path d="M1004 238 C 990 230, 980 226, 966 224" stroke="rgba(255,255,255,.74)" stroke-width="10" stroke-linecap="round"/>
-          <path d="M984 204 C 996 196, 1006 194, 1016 196" stroke="rgba(255,255,255,.55)" stroke-width="6" stroke-linecap="round"/>
-          <!-- tiny heart above kiss -->
-          <path d="M985 160
-                   C 985 150, 997 150, 997 160
-                   C 997 170, 985 176, 985 176
-                   C 985 176, 973 170, 973 160
-                   C 973 150, 985 150, 985 160 Z"
-                fill="rgba(255,92,122,.55)"/>
+        <!-- Woman -->
+        <g opacity="0.95" transform="translate(860,120)">
+          <circle cx="120" cy="60" r="26" fill="rgba(255,255,255,.95)"/>
+          <path d="M105 90 C 95 130, 80 170, 65 220
+                   C 60 240, 78 250, 88 232
+                   C 102 206, 112 170, 120 140
+                   C 128 170, 138 206, 152 232
+                   C 162 250, 180 240, 175 220
+                   C 160 170, 145 130, 135 90 Z"
+                fill="rgba(255,255,255,.95)"/>
         </g>
 
-        <!-- runner + dog (left group) -->
-        <g class="runGroup" opacity="0.96">
-          <!-- leash -->
-          <path d="M360 292 C 330 305, 300 314, 265 322" stroke="rgba(255,255,255,.30)" stroke-width="5" stroke-linecap="round"/>
+        <!-- Walker: man + dog -->
+        <g class="walker" transform="translate(220,120)" stroke="rgba(255,255,255,.95)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <circle cx="210" cy="60" r="22" fill="rgba(255,255,255,.95)" stroke="none"/>
+          <path d="M210 86 L210 190" />
+          <path d="M210 120 L265 155" />
+          <path d="M210 120 L175 145" />
+          <path d="M210 190 L178 250" />
+          <path d="M210 190 L246 250" />
 
-          <!-- dog silhouette (more dog-like) -->
-          <g transform="translate(210,285)">
-            <!-- body -->
-            <ellipse cx="40" cy="40" rx="42" ry="24" fill="rgba(255,255,255,.92)"/>
-            <!-- head -->
-            <circle cx="88" cy="34" r="16" fill="rgba(255,255,255,.92)"/>
-            <!-- ear -->
-            <path d="M92 20 C 84 10, 72 12, 76 26 C 80 34, 88 30, 92 20 Z" fill="rgba(255,255,255,.92)"/>
-            <!-- legs -->
-            <path d="M22 60 L18 80" stroke="rgba(255,255,255,.92)" stroke-width="10" stroke-linecap="round"/>
-            <path d="M44 60 L40 82" stroke="rgba(255,255,255,.92)" stroke-width="10" stroke-linecap="round"/>
-            <path d="M60 58 L58 82" stroke="rgba(255,255,255,.92)" stroke-width="10" stroke-linecap="round"/>
-            <path d="M78 56 L76 80" stroke="rgba(255,255,255,.92)" stroke-width="10" stroke-linecap="round"/>
-            <!-- tail -->
-            <path d="M5 34 C -12 24, -12 10, 2 10" stroke="rgba(255,255,255,.92)" stroke-width="10" stroke-linecap="round"/>
-          </g>
+          <path d="M265 155 L120 205" stroke="rgba(255,255,255,.60)" stroke-width="8"/>
 
-          <!-- running man -->
-          <g transform="translate(340,160)">
-            <circle cx="70" cy="40" r="20" fill="rgba(255,255,255,.92)"/>
-            <!-- torso -->
-            <path d="M56 60 C 52 110, 44 140, 28 190
-                     C 20 212, 46 222, 56 198
-                     C 68 170, 74 138, 78 112
-                     C 86 142, 96 170, 110 196
-                     C 124 222, 150 212, 140 190
-                     C 122 140, 112 110, 106 60 Z"
-                  fill="rgba(255,255,255,.92)"/>
-            <!-- arms (running pose) -->
-            <path d="M54 96 C 24 100, 14 110, 8 122" stroke="rgba(255,255,255,.78)" stroke-width="12" stroke-linecap="round"/>
-            <path d="M104 98 C 132 110, 144 124, 156 142" stroke="rgba(255,255,255,.78)" stroke-width="12" stroke-linecap="round"/>
-            <!-- legs (running) -->
-            <path d="M66 190 C 48 220, 36 238, 22 260" stroke="rgba(255,255,255,.88)" stroke-width="14" stroke-linecap="round"/>
-            <path d="M94 190 C 112 216, 134 232, 162 250" stroke="rgba(255,255,255,.88)" stroke-width="14" stroke-linecap="round"/>
+          <g transform="translate(40,170)" stroke-width="12">
+            <path d="M60 38 C 40 38, 30 52, 30 70
+                     C 30 92, 46 104, 66 104
+                     C 88 104, 102 90, 104 72
+                     C 122 72, 132 62, 132 48
+                     C 132 30, 118 22, 102 26
+                     C 92 10, 72 10, 60 22 Z" />
+            <path d="M104 26 C 116 6, 138 12, 126 34" />
+            <path d="M30 64 C 12 54, 12 30, 32 30" />
+            <path d="M54 104 L50 132" />
+            <path d="M76 104 L74 132" />
+            <path d="M96 104 L98 132" />
           </g>
+        </g>
+
+        <!-- Kiss appears -->
+        <g class="kissGroup" transform="translate(830,120)" opacity="0.96" fill="rgba(255,255,255,.95)">
+          <circle cx="88" cy="70" r="22"/>
+          <circle cx="132" cy="66" r="22"/>
+          <path d="M68 92 C 54 128, 52 166, 60 230 C 64 260, 92 270, 106 250
+                   C 112 242, 112 232, 110 220
+                   C 118 240, 128 254, 144 250
+                   C 166 244, 170 218, 166 190
+                   C 160 146, 150 118, 140 92 Z"/>
+          <path d="M116 24
+                   C 116 14, 128 14, 128 24
+                   C 128 34, 116 40, 116 40
+                   C 116 40, 104 34, 104 24
+                   C 104 14, 116 14, 116 24 Z"
+                fill="rgba(255,92,122,.85)"/>
         </g>
       </svg>
 
@@ -751,7 +730,7 @@
 
   <script>
     (() => {
-      // ---- Sound (works after first user gesture) ----
+      // ---- Sound (beeps only; needs first user click/tap) ----
       let audioCtx = null;
       let soundEnabled = false;
 
@@ -761,21 +740,18 @@
         soundEnabled = true;
         document.getElementById("soundStatus").textContent = "🔊 Sound";
       }
-
       function beep(freq=740, dur=0.08, type="sine", gain=0.05){
         if (!soundEnabled) return;
         const ctx = audioCtx;
         const o = ctx.createOscillator();
         const g = ctx.createGain();
-        o.type = type;
-        o.frequency.value = freq;
-        g.gain.value = gain;
+        o.type = type; o.frequency.value = freq; g.gain.value = gain;
         o.connect(g); g.connect(ctx.destination);
         o.start(); o.stop(ctx.currentTime + dur);
       }
-      function notifSound(){ beep(880,0.07,"sine",0.05); setTimeout(()=>beep(660,0.09,"sine",0.05),90); }
-      function errorSound(){ beep(220,0.10,"square",0.04); setTimeout(()=>beep(180,0.12,"square",0.04),110); }
-      function okSound(){ beep(523.25,0.06,"sine",0.05); setTimeout(()=>beep(783.99,0.09,"sine",0.05),80); }
+      const notifSound = () => { beep(880,0.07,"sine",0.05); setTimeout(()=>beep(660,0.09,"sine",0.05),90); };
+      const errorSound = () => { beep(220,0.10,"square",0.04); setTimeout(()=>beep(180,0.12,"square",0.04),110); };
+      const okSound    = () => { beep(523.25,0.06,"sine",0.05); setTimeout(()=>beep(783.99,0.09,"sine",0.05),80); };
 
       // ---- UI refs ----
       const toast = document.getElementById("toast");
@@ -787,13 +763,18 @@
       const mailTime = document.getElementById("mailTime");
       const assignArea = document.getElementById("assignArea");
 
+      const chatOverlay = document.getElementById("chatOverlay");
+      const chatBody = document.getElementById("chatBody");
+      const chatClose = document.getElementById("chatClose");
+
       const termWin = document.getElementById("termWin");
       const screen = document.getElementById("screen");
       const cmdInput = document.getElementById("cmdInput");
       const runBtn = document.getElementById("runBtn");
       const devLabel = document.getElementById("devLabel");
 
-      const hintBtn = document.getElementById("hintBtn");
+      const hintBtnTop = document.getElementById("hintBtnTop");
+      const hintBtnRow = document.getElementById("hintBtnRow");
       const hintPanel = document.getElementById("hintPanel");
       const hintText = document.getElementById("hintText");
 
@@ -801,13 +782,12 @@
 
       // ---- State ----
       const st = {
-        ticketAssigned:false,
         noTries:0,
-        phase:"pre", // pre, sw, fw, ise, vpn, done
-        sw: { sawStatus:false, fixedVlan:false },
-        fw: { sawAcl:false, ranPT:false, fixedAcl:false, appliedGroup:false, wrote:false },
+        phase:"pre",
+        sw:{ sawStatus:false, fixedVlan:false },
+        fw:{ ranPT:false, fixedAcl:false, appliedGroup:false, wrote:false },
         ise:{ sawApp:false, sawLogs:false },
-        vpn:{ sawIke:false, cleared:false },
+        vpn:{ sawIke:false, cleared:false }
       };
 
       // ---- Terminal helpers ----
@@ -819,44 +799,141 @@
         screen.scrollTop = screen.scrollHeight;
       }
       function prompt(){
-        if (st.phase === "sw") return "SW-CORE-01#";
-        if (st.phase === "fw") return "FW-EDGE-01#";
-        if (st.phase === "ise") return "ise/admin#";
-        if (st.phase === "vpn") return "VPN-GW-01#";
-        if (st.phase === "done") return "CHANGE-MGR#";
+        if (st.phase==="sw")  return "SW-CORE-01#";
+        if (st.phase==="fw")  return "FW-EDGE-01#";
+        if (st.phase==="ise") return "ise/admin#";
+        if (st.phase==="vpn") return "VPN-GW-01#";
         return "YUKI-NOC#";
       }
       function cmdEcho(cmd){ tLine(`${prompt()} ${cmd}`, "tCmd"); }
       function setDev(label){ devLabel.textContent = "• " + label; }
+      function norm(s){ return (s||"").trim().toLowerCase().replace(/\s+/g," "); }
 
-      // ---- Hints toggle (only on click) ----
+      // ---- Hints ----
       let hintOpen = false;
-      hintBtn.addEventListener("click", () => {
+      function toggleHints(){
         hintOpen = !hintOpen;
         hintPanel.style.display = hintOpen ? "block" : "none";
-      });
+      }
+      hintBtnTop.addEventListener("click", toggleHints);
+      hintBtnRow.addEventListener("click", toggleHints);
+
+      function nextHint(){
+        if (st.phase==="pre") return "enable";
+        if (st.phase==="sw"){
+          if (!st.sw.sawStatus) return "show interface status";
+          if (!st.sw.fixedVlan) return "conf t ; interface gi1/0/24 ; switchport access vlan 214 ; end ; wr mem";
+          return "next";
+        }
+        if (st.phase==="fw"){
+          if (!st.fw.ranPT) return "packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443 detailed";
+          if (!st.fw.fixedAcl) return "conf t ; access-list OUTSIDE-IN extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 ; end";
+          if (!st.fw.appliedGroup) return "conf t ; access-group OUTSIDE-IN in interface outside ; end";
+          if (!st.fw.wrote) return "write memory";
+          return "next";
+        }
+        if (st.phase==="ise"){
+          if (!st.ise.sawApp) return "show application status ise";
+          if (!st.ise.sawLogs) return "show logging application ise-auth.log tail";
+          return "next";
+        }
+        if (st.phase==="vpn"){
+          if (!st.vpn.sawIke) return "show crypto ikev2 sa";
+          if (!st.vpn.cleared) return "clear crypto ikev2 sa";
+          return "deliver";
+        }
+        return "—";
+      }
       function setHint(msg){ hintText.textContent = msg; }
 
-      // ---- Boot toast ----
-      function boot(){
-        mailTime.textContent = new Date().toLocaleString();
-        setTimeout(() => { toast.style.display = "block"; }, 900);
+      // ---- Clear prompts for next/deliver ----
+      function promptNext(){
+        tLine("", "tDim");
+        tLine("👉 Type: next", "tInfo");
+        setHint("next");
+      }
+      function promptDeliver(){
+        tLine("", "tDim");
+        tLine("🚀 Type: deliver", "tInfo");
+        setHint("deliver");
       }
 
+      // ---- Teams-like chat with typing animation ----
+      function clearChat(){ chatBody.innerHTML = ""; }
+      function addBubble(text){
+        const b = document.createElement("div");
+        b.className = "bubble";
+        b.textContent = text;
+        chatBody.appendChild(b);
+      }
+      function addTyping(){
+        const t = document.createElement("div");
+        t.className = "typing";
+        t.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+        chatBody.appendChild(t);
+        return t;
+      }
+      async function showYukiChatSequence(){
+        chatOverlay.style.display = "block";
+        chatOverlay.setAttribute("aria-hidden","false");
+        clearChat();
+
+        let typ = addTyping();
+        notifSound();
+        await new Promise(r=>setTimeout(r, 1100));
+        typ.remove();
+        addBubble("Hi Nikhil I hope you are doing good");
+        await new Promise(r=>setTimeout(r, 650));
+
+        typ = addTyping();
+        await new Promise(r=>setTimeout(r, 1200));
+        typ.remove();
+        addBubble("The case you assigned is priority 1 I need this to be sorted asap.");
+        await new Promise(r=>setTimeout(r, 650));
+
+        typ = addTyping();
+        await new Promise(r=>setTimeout(r, 1400));
+        typ.remove();
+        addBubble("I know you are the right person you have always been the right person for this job …. Well get to it bye now take care");
+
+        setTimeout(() => {
+          chatOverlay.style.display = "none";
+          chatOverlay.setAttribute("aria-hidden","true");
+        }, 2300);
+      }
+      chatClose.addEventListener("click", () => {
+        chatOverlay.style.display = "none";
+        chatOverlay.setAttribute("aria-hidden","true");
+      });
+
+      // ---- Boot ----
+      function boot(){
+        mailTime.textContent = new Date().toLocaleString();
+        setTimeout(()=>{ toast.style.display = "block"; }, 650);
+      }
+
+      // ---- Open mail: toast disappears + mail opens + chat starts ----
       function openMail(){
         ensureAudio();
         notifSound();
+
+        // IMPORTANT: toast disappears once clicked
+        toast.style.display = "none";
+
         overlay.style.display = "block";
-        overlay.setAttribute("aria-hidden", "false");
+        overlay.setAttribute("aria-hidden","false");
+
+        setTimeout(showYukiChatSequence, 350);
       }
       toast.addEventListener("click", openMail);
       toast.addEventListener("keydown", (e)=>{ if(e.key==="Enter") openMail(); });
-      closeMail.addEventListener("click", () => {
-        overlay.style.display = "none";
-        overlay.setAttribute("aria-hidden", "true");
+
+      closeMail.addEventListener("click", ()=>{
+        overlay.style.display="none";
+        overlay.setAttribute("aria-hidden","true");
       });
 
-      // ---- NO teleport (far, hard to click) ----
+      // ---- NO button teleport ----
       function teleportNo(){
         ensureAudio();
         st.noTries++;
@@ -864,18 +941,12 @@
 
         const area = assignArea.getBoundingClientRect();
         const btn = assignNo.getBoundingClientRect();
-
-        // random position inside assignArea, keep within bounds
-        const pad = 10;
+        const pad = 6;
         const maxX = Math.max(pad, area.width - btn.width - pad);
         const maxY = Math.max(pad, area.height - btn.height - pad);
 
-        const x = pad + Math.random() * maxX;
-        const y = pad + Math.random() * maxY;
-
-        assignNo.style.left = x + "px";
-        assignNo.style.top = y + "px";
-        assignNo.style.transform = `rotate(${(Math.random()*10-5).toFixed(1)}deg)`;
+        assignNo.style.left = (pad + Math.random()*maxX) + "px";
+        assignNo.style.top  = (pad + Math.random()*maxY) + "px";
 
         attemptsEl.textContent = `Nice try. You can’t get me. (${st.noTries}/5)`;
 
@@ -889,18 +960,16 @@
       assignNo.addEventListener("click", (e)=>{ e.preventDefault(); teleportNo(); });
       assignNo.addEventListener("touchstart", (e)=>{ e.preventDefault(); teleportNo(); }, {passive:false});
 
-      // ---- Assign YES starts terminal ----
-      assignYes.addEventListener("click", () => {
+      // ---- Start terminal ----
+      assignYes.addEventListener("click", ()=>{
         ensureAudio();
         okSound();
-
-        st.ticketAssigned = true;
-        overlay.style.display = "none";
-        overlay.setAttribute("aria-hidden", "true");
-        termWin.style.display = "block";
+        overlay.style.display="none";
+        overlay.setAttribute("aria-hidden","true");
+        termWin.style.display="block";
 
         setDev("INCIDENT VAL-0214 • Trace started");
-        tLine("🌌 OPERATION: SECURE THE HEART 🌌", "tInfo");
+        tLine("🛡️ OPERATION: SECURE THE HEART 🛡️", "tInfo");
         tLine("P1: Traffic NOT REACHABLE (10.214.0.10 → 10.13.0.7) TCP/443", "tWarn");
         tLine("Path: Switch → Firewall → ISE → VPN → Delivery", "tDim");
         tLine("", "tDim");
@@ -909,43 +978,14 @@
         cmdInput.focus();
       });
 
-      // ---- Command engine (standard commands only; next/deliver for story) ----
-      function norm(s){ return (s||"").trim().toLowerCase().replace(/\s+/g," "); }
-
-      function showRejected(){
+      function reject(){
         errorSound();
         tLine("% Invalid input detected at '^' marker.", "tBad");
         setHint(nextHint());
       }
 
-      function nextHint(){
-        if (st.phase === "pre") return "enable";
-        if (st.phase === "sw"){
-          if (!st.sw.sawStatus) return "show interface status";
-          if (!st.sw.fixedVlan) return "conf t ; interface gi1/0/24 ; switchport access vlan 214 ; end ; wr mem";
-          return "next";
-        }
-        if (st.phase === "fw"){
-          if (!st.fw.ranPT) return "packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443 detailed";
-          if (!st.fw.fixedAcl) return "conf t ; access-list OUTSIDE-IN extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 ; end";
-          if (!st.fw.appliedGroup) return "conf t ; access-group OUTSIDE-IN in interface outside ; end";
-          if (!st.fw.wrote) return "write memory";
-          return "next";
-        }
-        if (st.phase === "ise"){
-          if (!st.ise.sawApp) return "show application status ise";
-          if (!st.ise.sawLogs) return "show logging application ise-auth.log tail";
-          return "next";
-        }
-        if (st.phase === "vpn"){
-          if (!st.vpn.sawIke) return "show crypto ikev2 sa";
-          if (!st.vpn.cleared) return "clear crypto ikev2 sa";
-          return "deliver";
-        }
-        return "—";
-      }
-
-      async function exec(cmdRaw){
+      // ---- Command engine ----
+      function exec(cmdRaw){
         const cmd = cmdRaw.trim();
         const c = norm(cmdRaw);
         if (!cmd) return;
@@ -953,98 +993,58 @@
         cmdEcho(cmd);
         ensureAudio();
 
-        // PRE
-        if (st.phase === "pre"){
-          if (c === "enable"){
+        // pre
+        if (st.phase==="pre"){
+          if (c==="enable"){
             okSound();
+            st.phase="sw";
+            setDev("SW-CORE-01 • Access Layer");
             tLine("Password: ********", "tDim");
             tLine("Entering privileged mode…", "tDim");
             tLine("Access granted: role=NetworkSecurity | clearance=LOVE-PRIME", "tOk");
-            st.phase = "sw";
-            setDev("SW-CORE-01 • Access Layer");
             tLine("", "tDim");
             tLine("=== HOP 1/4: SWITCH ===", "tInfo");
             tLine("Symptom: client traffic appears quarantined on access port.", "tWarn");
             setHint(nextHint());
             return;
           }
-          errorSound();
           tLine("% Access denied. Type: enable", "tWarn");
           setHint(nextHint());
           return;
         }
 
-        // SWITCH (Cisco IOS)
-        if (st.phase === "sw"){
-          if (c === "show interface status"){
-            st.sw.sawStatus = true;
+        // switch
+        if (st.phase==="sw"){
+          if (c==="show interface status"){
+            st.sw.sawStatus=true;
             tLine("Port      Name               Status       Vlan       Duplex Speed Type", "tDim");
             if (!st.sw.fixedVlan){
               tLine("Gi1/0/24  NIKK-CLIENT         connected    999        a-full a-100 10/100/1000-TX", "tWarn");
-              tLine("% VLAN mismatch: expected 214 (VALENTINE), found 999 (QUARANTINE).", "tBad");
+              tLine("% VLAN mismatch: expected 214, found 999.", "tBad");
               errorSound();
             } else {
               tLine("Gi1/0/24  NIKK-CLIENT         connected    214        a-full a-100 10/100/1000-TX", "tOk");
               okSound();
+              promptNext();
             }
             setHint(nextHint());
             return;
           }
 
-          if (c === "show interfaces gi1/0/24 switchport"){
-            tLine("Name: Gi1/0/24", "tDim");
-            tLine("Administrative Mode: static access", "tDim");
-            tLine("Operational Mode: static access", "tDim");
-            tLine("Access Mode VLAN: " + (st.sw.fixedVlan ? "214 (VALENTINE)" : "999 (QUARANTINE)"), st.sw.fixedVlan ? "tOk" : "tBad");
-            if (!st.sw.fixedVlan) errorSound(); else okSound();
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show vlan brief"){
-            tLine("VLAN Name                             Status    Ports", "tDim");
-            tLine("214  VALENTINE                         active", "tOk");
-            tLine("999  QUARANTINE                        active    " + (st.sw.fixedVlan ? "" : "Gi1/0/24"), st.sw.fixedVlan ? "tDim" : "tWarn");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show mac address-table interface gi1/0/24"){
-            tLine("          Mac Address Table", "tDim");
-            tLine("-------------------------------------------", "tDim");
-            tLine("Vlan    Mac Address       Type        Ports", "tDim");
-            tLine((st.sw.fixedVlan ? "214" : "999") + "     aaaa.bbbb.cccc    DYNAMIC     Gi1/0/24", st.sw.fixedVlan ? "tOk" : "tWarn");
-            setHint(nextHint());
-            return;
-          }
-
-          // accept config chain that includes switchport access vlan 214 (standard)
           if (c.includes("switchport access vlan 214")){
-            if (!st.sw.fixedVlan){
-              tLine("Enter configuration commands, one per line. End with CNTL/Z.", "tDim");
-              tLine("SW-CORE-01(config)# interface Gi1/0/24", "tDim");
-              tLine("SW-CORE-01(config-if)# switchport mode access", "tDim");
-              tLine("SW-CORE-01(config-if)# switchport access vlan 214", "tOk");
-              tLine("SW-CORE-01(config-if)# end", "tDim");
-              tLine("SW-CORE-01# write memory", "tDim");
-              tLine("Building configuration... [OK]", "tOk");
-              st.sw.fixedVlan = true;
-              okSound();
-            } else {
-              tLine("% No changes required.", "tDim");
-            }
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "wr mem" || c === "write memory"){
-            tLine("Building configuration... [OK]", "tOk");
+            st.sw.fixedVlan=true;
             okSound();
-            setHint(nextHint());
+            tLine("Enter configuration commands, one per line. End with CNTL/Z.", "tDim");
+            tLine("SW-CORE-01(config)# interface Gi1/0/24", "tDim");
+            tLine("SW-CORE-01(config-if)# switchport access vlan 214", "tOk");
+            tLine("SW-CORE-01(config-if)# end", "tDim");
+            tLine("SW-CORE-01# write memory", "tDim");
+            tLine("Building configuration... [OK]", "tOk");
+            promptNext();
             return;
           }
 
-          if (c === "next"){
+          if (c==="next"){
             if (!st.sw.fixedVlan){
               errorSound();
               tLine("% BLOCKED: VLAN still incorrect on Gi1/0/24.", "tWarn");
@@ -1052,7 +1052,7 @@
               return;
             }
             okSound();
-            st.phase = "fw";
+            st.phase="fw";
             setDev("FW-EDGE-01 • Perimeter Firewall");
             tLine("", "tDim");
             tLine("=== HOP 2/4: FIREWALL ===", "tInfo");
@@ -1061,45 +1061,13 @@
             return;
           }
 
-          showRejected();
-          return;
+          reject(); return;
         }
 
-        // FIREWALL (ASA)
-        if (st.phase === "fw"){
-          if (c === "show access-list"){
-            st.fw.sawAcl = true;
-            tLine("access-list OUTSIDE-IN; 4 elements", "tDim");
-            if (!st.fw.fixedAcl){
-              tLine("deny tcp any host 10.13.0.7 eq 443 (hitcnt=57)", "tBad");
-              tLine("permit icmp any any (hitcnt=19)", "tDim");
-              tLine("deny ip any any (hitcnt=1200)", "tDim");
-              errorSound();
-            } else {
-              tLine("permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 (hitcnt=14)", "tOk");
-              tLine("deny ip any any (hitcnt=1200)", "tDim");
-              okSound();
-            }
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show run access-group"){
-            tLine("access-group OUTSIDE-IN in interface outside", st.fw.appliedGroup ? "tOk" : "tWarn");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show run access-list"){
-            tLine("access-list OUTSIDE-IN extended " + (st.fw.fixedAcl
-              ? "permit tcp host 10.214.0.10 host 10.13.0.7 eq https"
-              : "deny tcp any host 10.13.0.7 eq https"), st.fw.fixedAcl ? "tOk" : "tBad");
-            setHint(nextHint());
-            return;
-          }
-
+        // firewall
+        if (st.phase==="fw"){
           if (c.startsWith("packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443")){
-            st.fw.ranPT = true;
+            st.fw.ranPT=true;
             if (!st.fw.fixedAcl){
               tLine("Phase: 1  ROUTE-LOOKUP  Result: ALLOW", "tDim");
               tLine("Phase: 2  ACCESS-LIST   Result: DROP", "tBad");
@@ -1116,110 +1084,80 @@
           }
 
           if (c.includes("access-list outside-in extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443")){
-            st.fw.fixedAcl = true;
-            tLine("Applied: OUTSIDE-IN permit tcp host 10.214.0.10 host 10.13.0.7 eq 443", "tOk");
+            st.fw.fixedAcl=true;
             okSound();
+            tLine("Applied: OUTSIDE-IN permit tcp host 10.214.0.10 host 10.13.0.7 eq 443", "tOk");
             setHint(nextHint());
             return;
           }
 
           if (c.includes("access-group outside-in in interface outside")){
-            st.fw.appliedGroup = true;
+            st.fw.appliedGroup=true;
+            okSound();
             tLine("access-group OUTSIDE-IN in interface outside", "tOk");
-            okSound();
             setHint(nextHint());
             return;
           }
 
-          if (c === "write memory" || c === "wr mem"){
-            st.fw.wrote = true;
+          if (c==="write memory" || c==="wr mem"){
+            st.fw.wrote=true;
+            okSound();
             tLine("Building configuration... [OK]", "tOk");
-            okSound();
-            setHint(nextHint());
+            promptNext();
             return;
           }
 
-          if (c === "next"){
+          if (c==="next"){
             if (!(st.fw.ranPT && st.fw.fixedAcl && st.fw.appliedGroup && st.fw.wrote)){
               errorSound();
-              tLine("% BLOCKED: firewall steps incomplete (run packet-tracer, add permit, apply access-group, write memory).", "tWarn");
+              tLine("% BLOCKED: firewall steps incomplete.", "tWarn");
               setHint(nextHint());
               return;
             }
             okSound();
-            st.phase = "ise";
+            st.phase="ise";
             setDev("ISE-PSN-01 • Cisco ISE (ADE-OS)");
             tLine("", "tDim");
             tLine("=== HOP 3/4: ISE ===", "tInfo");
-            tLine("Symptom: policy/auth may be impacting the flow.", "tWarn");
+            tLine("Symptom: auth/authorization may be impacting the flow.", "tWarn");
             setHint(nextHint());
             return;
           }
 
-          showRejected();
-          return;
+          reject(); return;
         }
 
-        // ISE (ADE-OS style commands)
-        if (st.phase === "ise"){
-          if (c === "show application status ise"){
-            st.ise.sawApp = true;
+        // ise
+        if (st.phase==="ise"){
+          if (c==="show application status ise"){
+            st.ise.sawApp=true;
+            okSound();
             tLine("ISE PROCESS NAME                       STATE", "tDim");
-            tLine("Database Listener                      running", "tOk");
             tLine("Application Server                     running", "tOk");
             tLine("Policy Service                         running", "tOk");
-            tLine("Profiler Service                       running", "tDim");
-            okSound();
             setHint(nextHint());
             return;
           }
 
-          if (c === "show logging application ise-auth.log tail"){
-            st.ise.sawLogs = true;
+          if (c==="show logging application ise-auth.log tail"){
+            st.ise.sawLogs=true;
+            errorSound();
             tLine("tail: ise-auth.log", "tDim");
             tLine("... AuthZ: ACCESS_REJECT (guest quarantine) for user nikkkuuuu", "tBad");
             tLine("... Next: policy updated by change owner (GUI) — pending re-auth", "tWarn");
-            errorSound();
-            setHint("next");
+            promptNext();
             return;
           }
 
-          if (c === "show logging application ise-psc.log tail"){
-            tLine("tail: ise-psc.log", "tDim");
-            tLine("... RADIUS: Access-Reject sent to NAD (previous attempt)", "tWarn");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show logging system ade.log tail"){
-            tLine("tail: ade.log", "tDim");
-            tLine("... System healthy. No disk or service faults.", "tOk");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show version"){
-            tLine("Cisco Identity Services Engine (ISE) — ADE-OS", "tDim");
-            tLine("Version: 3.x (simulated)", "tDim");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "show uptime"){
-            tLine("System uptime: 23 days, 11 hours, 07 minutes", "tDim");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c === "next"){
+          if (c==="next"){
             if (!(st.ise.sawApp && st.ise.sawLogs)){
               errorSound();
-              tLine("% BLOCKED: check ISE application status + auth logs first.", "tWarn");
+              tLine("% BLOCKED: check app status + auth logs first.", "tWarn");
               setHint(nextHint());
               return;
             }
             okSound();
-            st.phase = "vpn";
+            st.phase="vpn";
             setDev("VPN-GW-01 • VPN Gateway");
             tLine("", "tDim");
             tLine("=== HOP 4/4: VPN ===", "tInfo");
@@ -1228,95 +1166,80 @@
             return;
           }
 
-          showRejected();
-          return;
+          reject(); return;
         }
 
-        // VPN (Cisco/ASA-ish)
-        if (st.phase === "vpn"){
-          if (c === "show crypto ikev2 sa"){
-            st.vpn.sawIke = true;
+        // vpn
+        if (st.phase==="vpn"){
+          if (c==="show crypto ikev2 sa"){
+            st.vpn.sawIke=true;
             tLine("IPv4 Crypto IKEv2  SA", "tDim");
             tLine("Tunnel-id Local               Remote              Status", "tDim");
             if (!st.vpn.cleared){
+              errorSound();
               tLine("0        10.0.0.1:500         10.0.0.2:500         DOWN", "tBad");
               tLine("% No active IKEv2 SAs. Clear & renegotiate.", "tWarn");
-              errorSound();
             } else {
+              okSound();
               tLine("7        10.0.0.1:500         10.0.0.2:500         UP-ACTIVE", "tOk");
               tLine("Encryption: AES-256  Integrity: SHA256  DPD: enabled", "tOk");
-              okSound();
+              promptDeliver();
             }
             setHint(nextHint());
             return;
           }
 
-          if (c === "show crypto ipsec sa"){
-            tLine("pkts encaps: " + (st.vpn.cleared ? "18" : "0") + ", pkts decaps: " + (st.vpn.cleared ? "18" : "0"),
-                  st.vpn.cleared ? "tOk" : "tBad");
-            if (!st.vpn.cleared) { errorSound(); setHint(nextHint()); } else { okSound(); setHint(nextHint()); }
-            return;
-          }
-
-          if (c === "clear crypto ikev2 sa"){
-            st.vpn.cleared = true;
+          if (c==="clear crypto ikev2 sa"){
+            st.vpn.cleared=true;
+            okSound();
             tLine("Clearing IKEv2 SAs…", "tDim");
             tLine("Re-negotiation initiated.", "tOk");
-            okSound();
-            setHint(nextHint());
+            promptDeliver();
             return;
           }
 
-          if (c === "deliver"){
+          if (c==="deliver"){
             if (!(st.vpn.sawIke && st.vpn.cleared)){
               errorSound();
-              tLine("% BLOCKED: verify IKEv2 SA and clear to renegotiate first.", "tWarn");
+              tLine("% BLOCKED: run 'show crypto ikev2 sa' then 'clear crypto ikev2 sa' first.", "tWarn");
               setHint(nextHint());
               return;
             }
-
-            st.phase = "done";
-            setDev("CHANGE-MGR • Payload Delivery");
             okSound();
             tLine("", "tDim");
             tLine("=== DELIVERY ===", "tInfo");
-            tLine("Capturing TCP/443…", "tDim");
-            tLine("Frames: 18  Drops: 0  Latency: 0ms", "tOk");
             tLine("Payload delivered:", "tDim");
             tLine("“I love you, my forever Valentine, Nikkkuuuu.” 💖", "tOk");
-            tLine("", "tDim");
-            tLine("Mission complete.", "tOk");
 
-            setTimeout(() => {
-              termWin.style.display = "none";
-              ending.style.display = "block";
+            setTimeout(()=>{
+              termWin.style.display="none";
+              ending.style.display="block";
               okSound();
-            }, 1200);
+            }, 900);
             return;
           }
 
-          if (c === "next"){
-            errorSound();
-            tLine("% NEXT not valid here. Use: deliver", "tWarn");
-            setHint("deliver");
-            return;
-          }
-
-          showRejected();
-          return;
+          reject(); return;
         }
       }
 
-      function runFromUI(){
+      function runNow(){
         const v = cmdInput.value;
         cmdInput.value = "";
         exec(v);
       }
-      runBtn.addEventListener("click", runFromUI);
-      cmdInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") runFromUI(); });
+      runBtn.addEventListener("click", runNow);
+      cmdInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") runNow(); });
+
+      // ---- Start toast ----
+      function boot(){
+        mailTime.textContent = new Date().toLocaleString();
+        setTimeout(()=>{ toast.style.display = "block"; }, 650);
+      }
 
       boot();
     })();
   </script>
 </body>
 </html>
+```
