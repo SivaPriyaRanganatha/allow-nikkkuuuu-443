@@ -26,6 +26,7 @@
       --blue:#7dd3fc;
       --pink:#ff4f87;
       --pink2:#ff77a6;
+      --purple:#6d28d9;
     }
 
     *{box-sizing:border-box}
@@ -55,7 +56,7 @@
     }
     .wallpaper::before{
       content:"";
-      position:absolute; inset:-200px;
+      position:absolute; inset:-220px;
       background:
         radial-gradient(circle at 18% 22%, rgba(255,92,122,.25) 0 2px, transparent 3px) 0 0/88px 88px,
         radial-gradient(circle at 75% 44%, rgba(255,216,107,.18) 0 2px, transparent 3px) 0 0/112px 112px,
@@ -451,7 +452,7 @@
       position:absolute;
       right:14px;
       top:60px;
-      width:min(420px, calc(100% - 28px));
+      width:min(460px, calc(100% - 28px));
       border-radius:18px;
       border:1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.38);
@@ -474,66 +475,66 @@
       color: rgba(255,255,255,.86);
       line-height:1.45;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      white-space:pre-wrap;
     }
 
-    /* Ending */
+    /* NEW ENDING: blank-ish pink/purple + big moving hearts + message */
     .ending{
       position:absolute; inset:0;
       display:none;
       z-index:200;
       overflow:hidden;
       background:
-        radial-gradient(1100px 700px at 50% 30%, rgba(255,119,166,.34), transparent 60%),
-        radial-gradient(900px 640px at 30% 80%, rgba(255,79,135,.26), transparent 60%),
-        linear-gradient(135deg, #240512, #12020a);
+        radial-gradient(1200px 800px at 30% 30%, rgba(255,79,135,.42), transparent 55%),
+        radial-gradient(1200px 800px at 70% 70%, rgba(109,40,217,.40), transparent 55%),
+        linear-gradient(135deg, #2a0050, #17002a);
     }
-    .endHearts{
-      position:absolute; inset:-30px;
-      background:
-        radial-gradient(circle at 12% 18%, rgba(255,92,122,.46) 0 2px, transparent 3px) 0 0/64px 64px,
-        radial-gradient(circle at 82% 42%, rgba(255,255,255,.18) 0 2px, transparent 3px) 0 0/110px 110px;
-      opacity:.9;
-      animation: driftEnd 10s ease-in-out infinite alternate;
-      filter: blur(.15px);
+    .heartsLayer{
+      position:absolute; inset:0;
+      pointer-events:none;
+      overflow:hidden;
     }
-    @keyframes driftEnd{
-      from{ transform: translate3d(-10px, -8px, 0) }
-      to{ transform: translate3d(10px, 8px, 0) }
-    }
-    .endStage{
+    .heart{
       position:absolute;
-      left:50%;
-      top:54%;
-      transform: translate(-50%,-50%);
-      width:min(1100px, 96vw);
-      opacity:0;
-      animation: endIn 1s ease .4s forwards;
-      filter: drop-shadow(0 18px 60px rgba(0,0,0,.55));
+      font-size: clamp(54px, 6vw, 120px);
+      color: rgba(255, 30, 90, .95);
+      text-shadow: 0 18px 60px rgba(0,0,0,.40);
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.35));
+      user-select:none;
+      will-change: transform, opacity;
     }
-    @keyframes endIn{ to{opacity:1} }
-    .walker{ animation: walkTo 4s ease-in-out 1s forwards; }
-    @keyframes walkTo{ 0%{ transform: translateX(-340px) } 100%{ transform: translateX(0px) } }
-    .kissGroup{ opacity:0; animation: kissOn 1.1s ease 4.25s forwards; }
-    @keyframes kissOn{ to{opacity:1} }
-    .finalText{
+    @keyframes floatUp{
+      0%   { transform: translate3d(0, 120vh, 0) rotate(0deg); opacity:0; }
+      10%  { opacity:1; }
+      85%  { opacity:1; }
+      100% { transform: translate3d(0, -140vh, 0) rotate(18deg); opacity:0; }
+    }
+    .loveText{
       position:absolute;
-      left:50%;
-      bottom:9%;
-      transform:translateX(-50%);
-      color: rgba(255,255,255,.94);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:16px;
-      letter-spacing:.02em;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
       text-align:center;
-      opacity:0;
-      animation: textIn 1.1s ease 2.6s forwards;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.20);
-      backdrop-filter: blur(10px);
+      font-weight:950;
+      letter-spacing:.02em;
+      font-size: clamp(34px, 5.5vw, 86px);
+      color: rgba(255,255,255,.96);
+      text-shadow: 0 18px 70px rgba(0,0,0,.55);
+      padding: 18px 22px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.14);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      line-height: 1.08;
     }
-    @keyframes textIn{ to{opacity:1} }
+    .loveText span{
+      display:block;
+      margin-top:10px;
+      font-size: clamp(26px, 3.8vw, 60px);
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+    }
   </style>
 </head>
 <body>
@@ -660,71 +661,13 @@
       </div>
     </div>
 
-    <!-- Ending -->
+    <!-- NEW ENDING -->
     <div class="ending" id="ending" aria-hidden="true">
-      <div class="endHearts"></div>
-
-      <svg class="endStage" viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80 330 C 280 310, 390 350, 600 330 C 820 310, 960 360, 1120 330"
-              stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linecap="round"/>
-
-        <!-- Woman -->
-        <g opacity="0.95" transform="translate(860,120)">
-          <circle cx="120" cy="60" r="26" fill="rgba(255,255,255,.95)"/>
-          <path d="M105 90 C 95 130, 80 170, 65 220
-                   C 60 240, 78 250, 88 232
-                   C 102 206, 112 170, 120 140
-                   C 128 170, 138 206, 152 232
-                   C 162 250, 180 240, 175 220
-                   C 160 170, 145 130, 135 90 Z"
-                fill="rgba(255,255,255,.95)"/>
-        </g>
-
-        <!-- Walker: man + dog -->
-        <g class="walker" transform="translate(220,120)" stroke="rgba(255,255,255,.95)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
-          <circle cx="210" cy="60" r="22" fill="rgba(255,255,255,.95)" stroke="none"/>
-          <path d="M210 86 L210 190" />
-          <path d="M210 120 L265 155" />
-          <path d="M210 120 L175 145" />
-          <path d="M210 190 L178 250" />
-          <path d="M210 190 L246 250" />
-
-          <path d="M265 155 L120 205" stroke="rgba(255,255,255,.60)" stroke-width="8"/>
-
-          <g transform="translate(40,170)" stroke-width="12">
-            <path d="M60 38 C 40 38, 30 52, 30 70
-                     C 30 92, 46 104, 66 104
-                     C 88 104, 102 90, 104 72
-                     C 122 72, 132 62, 132 48
-                     C 132 30, 118 22, 102 26
-                     C 92 10, 72 10, 60 22 Z" />
-            <path d="M104 26 C 116 6, 138 12, 126 34" />
-            <path d="M30 64 C 12 54, 12 30, 32 30" />
-            <path d="M54 104 L50 132" />
-            <path d="M76 104 L74 132" />
-            <path d="M96 104 L98 132" />
-          </g>
-        </g>
-
-        <!-- Kiss appears -->
-        <g class="kissGroup" transform="translate(830,120)" opacity="0.96" fill="rgba(255,255,255,.95)">
-          <circle cx="88" cy="70" r="22"/>
-          <circle cx="132" cy="66" r="22"/>
-          <path d="M68 92 C 54 128, 52 166, 60 230 C 64 260, 92 270, 106 250
-                   C 112 242, 112 232, 110 220
-                   C 118 240, 128 254, 144 250
-                   C 166 244, 170 218, 166 190
-                   C 160 146, 150 118, 140 92 Z"/>
-          <path d="M116 24
-                   C 116 14, 128 14, 128 24
-                   C 128 34, 116 40, 116 40
-                   C 116 40, 104 34, 104 24
-                   C 104 14, 116 14, 116 24 Z"
-                fill="rgba(255,92,122,.85)"/>
-        </g>
-      </svg>
-
-      <div class="finalText">Payload delivered: “I love you, my forever Valentine, Nikkkuuuu.” 💖</div>
+      <div class="heartsLayer" id="heartsLayer"></div>
+      <div class="loveText">
+        Nikkkuuuu I love you 😘😘
+        <span>❤️❤️❤️</span>
+      </div>
     </div>
   </div>
 
@@ -779,13 +722,15 @@
       const hintText = document.getElementById("hintText");
 
       const ending = document.getElementById("ending");
+      const heartsLayer = document.getElementById("heartsLayer");
 
       // ---- State ----
       const st = {
         noTries:0,
-        phase:"pre",
-        sw:{ sawStatus:false, fixedVlan:false },
-        fw:{ ranPT:false, fixedAcl:false, appliedGroup:false, wrote:false },
+        phase:"pre",          // pre -> sw -> fw -> ise -> vpn -> end
+        mode:"exec",          // exec | config | config-if
+        sw:{ sawStatus:false, inInt:false, vlanSet:false, saved:false },
+        fw:{ ranPT:false, inAcl:false, aclAdded:false, inAg:false, agApplied:false, saved:false },
         ise:{ sawApp:false, sawLogs:false },
         vpn:{ sawIke:false, cleared:false }
       };
@@ -799,17 +744,27 @@
         screen.scrollTop = screen.scrollHeight;
       }
       function prompt(){
-        if (st.phase==="sw")  return "SW-CORE-01#";
-        if (st.phase==="fw")  return "FW-EDGE-01#";
+        const host =
+          st.phase==="sw"  ? "SW-CORE-01" :
+          st.phase==="fw"  ? "FW-EDGE-01" :
+          st.phase==="ise" ? "ise/admin"  :
+          st.phase==="vpn" ? "VPN-GW-01"  : "YUKI-NOC";
+
+        // ISE prompt is usually "ise/admin#"
         if (st.phase==="ise") return "ise/admin#";
-        if (st.phase==="vpn") return "VPN-GW-01#";
-        return "YUKI-NOC#";
+
+        const suffix =
+          st.mode==="exec" ? "#" :
+          st.mode==="config" ? "(config)#" :
+          st.mode==="config-if" ? "(config-if)#" : "#";
+
+        return `${host}${suffix}`;
       }
       function cmdEcho(cmd){ tLine(`${prompt()} ${cmd}`, "tCmd"); }
       function setDev(label){ devLabel.textContent = "• " + label; }
       function norm(s){ return (s||"").trim().toLowerCase().replace(/\s+/g," "); }
 
-      // ---- Hints ----
+      // ---- Hints UI ----
       let hintOpen = false;
       function toggleHints(){
         hintOpen = !hintOpen;
@@ -818,45 +773,52 @@
       hintBtnTop.addEventListener("click", toggleHints);
       hintBtnRow.addEventListener("click", toggleHints);
 
+      // ---- Clear prompts for next/deliver ----
+      function promptNext(){
+        tLine("", "tDim");
+        tLine("👉 Type: next", "tInfo");
+        setHint(nextHint());
+      }
+      function promptDeliver(){
+        tLine("", "tDim");
+        tLine("🚀 Type: deliver", "tInfo");
+        setHint(nextHint());
+      }
+
+      // ---- Hints: now sequential (no semicolons) ----
       function nextHint(){
         if (st.phase==="pre") return "enable";
+
         if (st.phase==="sw"){
           if (!st.sw.sawStatus) return "show interface status";
-          if (!st.sw.fixedVlan) return "conf t ; interface gi1/0/24 ; switchport access vlan 214 ; end ; wr mem";
+          if (!st.sw.vlanSet) return "conf t → interface gi1/0/24 → switchport access vlan 214 → end → write memory";
+          if (!st.sw.saved) return "write memory";
           return "next";
         }
+
         if (st.phase==="fw"){
           if (!st.fw.ranPT) return "packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443 detailed";
-          if (!st.fw.fixedAcl) return "conf t ; access-list OUTSIDE-IN extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 ; end";
-          if (!st.fw.appliedGroup) return "conf t ; access-group OUTSIDE-IN in interface outside ; end";
-          if (!st.fw.wrote) return "write memory";
+          if (!st.fw.aclAdded) return "conf t → access-list OUTSIDE-IN extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 → end";
+          if (!st.fw.agApplied) return "conf t → access-group OUTSIDE-IN in interface outside → end";
+          if (!st.fw.saved) return "write memory";
           return "next";
         }
+
         if (st.phase==="ise"){
           if (!st.ise.sawApp) return "show application status ise";
           if (!st.ise.sawLogs) return "show logging application ise-auth.log tail";
           return "next";
         }
+
         if (st.phase==="vpn"){
           if (!st.vpn.sawIke) return "show crypto ikev2 sa";
           if (!st.vpn.cleared) return "clear crypto ikev2 sa";
           return "deliver";
         }
+
         return "—";
       }
       function setHint(msg){ hintText.textContent = msg; }
-
-      // ---- Clear prompts for next/deliver ----
-      function promptNext(){
-        tLine("", "tDim");
-        tLine("👉 Type: next", "tInfo");
-        setHint("next");
-      }
-      function promptDeliver(){
-        tLine("", "tDim");
-        tLine("🚀 Type: deliver", "tInfo");
-        setHint("deliver");
-      }
 
       // ---- Teams-like chat with typing animation ----
       function clearChat(){ chatBody.innerHTML = ""; }
@@ -910,19 +872,16 @@
       function boot(){
         mailTime.textContent = new Date().toLocaleString();
         setTimeout(()=>{ toast.style.display = "block"; }, 650);
+        setHint("enable");
       }
 
       // ---- Open mail: toast disappears + mail opens + chat starts ----
       function openMail(){
         ensureAudio();
         notifSound();
-
-        // IMPORTANT: toast disappears once clicked
-        toast.style.display = "none";
-
+        toast.style.display = "none"; // disappears after click
         overlay.style.display = "block";
         overlay.setAttribute("aria-hidden","false");
-
         setTimeout(showYukiChatSequence, 350);
       }
       toast.addEventListener("click", openMail);
@@ -968,6 +927,9 @@
         overlay.setAttribute("aria-hidden","true");
         termWin.style.display="block";
 
+        st.phase = "pre";
+        st.mode = "exec";
+
         setDev("INCIDENT VAL-0214 • Trace started");
         tLine("🛡️ OPERATION: SECURE THE HEART 🛡️", "tInfo");
         tLine("P1: Traffic NOT REACHABLE (10.214.0.10 → 10.13.0.7) TCP/443", "tWarn");
@@ -984,7 +946,43 @@
         setHint(nextHint());
       }
 
-      // ---- Command engine ----
+      // ---- Ending hearts generator ----
+      let heartsTimer = null;
+      function startHearts(){
+        heartsLayer.innerHTML = "";
+        const makeHeart = () => {
+          const h = document.createElement("div");
+          h.className = "heart";
+          h.textContent = "❤️";
+          const left = Math.random() * 100;
+          const dur = 6 + Math.random() * 6;     // 6-12s
+          const delay = Math.random() * 1.2;     // small delay
+          const scale = 0.7 + Math.random() * 1.1;
+          h.style.left = left + "vw";
+          h.style.animationDuration = dur + "s";
+          h.style.animationDelay = delay + "s";
+          h.style.transform = `translate3d(0, 120vh, 0) scale(${scale})`;
+          heartsLayer.appendChild(h);
+          // cleanup after animation
+          setTimeout(()=>{ h.remove(); }, (dur + delay) * 1000 + 200);
+        };
+
+        // burst to fill
+        for (let i=0;i<18;i++) makeHeart();
+
+        heartsTimer = setInterval(()=> {
+          for (let i=0;i<3;i++) makeHeart();
+        }, 600);
+      }
+
+      function showEnding(){
+        termWin.style.display = "none";
+        ending.style.display = "block";
+        ending.setAttribute("aria-hidden","false");
+        startHearts();
+      }
+
+      // ---- Command engine: realistic step-by-step Cisco mode ----
       function exec(cmdRaw){
         const cmd = cmdRaw.trim();
         const c = norm(cmdRaw);
@@ -993,18 +991,46 @@
         cmdEcho(cmd);
         ensureAudio();
 
-        // pre
-        if (st.phase==="pre"){
-          if (c==="enable"){
+        // global shortcuts
+        if (c === "hint" || c === "hints"){
+          toggleHints();
+          return;
+        }
+
+        // mode changes: end / exit
+        if (c === "end"){
+          if (st.phase === "ise") { reject(); return; } // ISE doesn't do end like IOS here
+          st.mode = "exec";
+          okSound();
+          tLine("Exited to privileged EXEC.", "tDim");
+          setHint(nextHint());
+          return;
+        }
+
+        if (c === "exit"){
+          if (st.phase === "ise") { reject(); return; }
+          if (st.mode === "config-if"){ st.mode = "config"; okSound(); tLine("Exit interface configuration mode.", "tDim"); setHint(nextHint()); return; }
+          if (st.mode === "config"){ st.mode = "exec"; okSound(); tLine("Exit configuration mode.", "tDim"); setHint(nextHint()); return; }
+          // exec exit ignore
+          tLine("% Use 'end' or 'logout' as appropriate.", "tWarn");
+          setHint(nextHint());
+          return;
+        }
+
+        // PRE phase: enable -> switch phase
+        if (st.phase === "pre"){
+          if (c === "enable"){
             okSound();
-            st.phase="sw";
+            st.phase = "sw";
+            st.mode = "exec";
             setDev("SW-CORE-01 • Access Layer");
             tLine("Password: ********", "tDim");
             tLine("Entering privileged mode…", "tDim");
             tLine("Access granted: role=NetworkSecurity | clearance=LOVE-PRIME", "tOk");
             tLine("", "tDim");
             tLine("=== HOP 1/4: SWITCH ===", "tInfo");
-            tLine("Symptom: client traffic appears quarantined on access port.", "tWarn");
+            tLine("Goal: Fix access VLAN on Gi1/0/24.", "tWarn");
+            tLine("Start with: show interface status", "tOk");
             setHint(nextHint());
             return;
           }
@@ -1013,124 +1039,189 @@
           return;
         }
 
-        // switch
-        if (st.phase==="sw"){
-          if (c==="show interface status"){
-            st.sw.sawStatus=true;
-            tLine("Port      Name               Status       Vlan       Duplex Speed Type", "tDim");
-            if (!st.sw.fixedVlan){
-              tLine("Gi1/0/24  NIKK-CLIENT         connected    999        a-full a-100 10/100/1000-TX", "tWarn");
-              tLine("% VLAN mismatch: expected 214, found 999.", "tBad");
-              errorSound();
-            } else {
-              tLine("Gi1/0/24  NIKK-CLIENT         connected    214        a-full a-100 10/100/1000-TX", "tOk");
+        // SWITCH phase (IOS-like)
+        if (st.phase === "sw"){
+          // Only exec mode commands here unless in config modes
+          if (st.mode === "exec"){
+            if (c === "show interface status"){
+              st.sw.sawStatus = true;
+              tLine("Port      Name               Status       Vlan       Duplex Speed Type", "tDim");
+              if (!st.sw.vlanSet){
+                errorSound();
+                tLine("Gi1/0/24  NIKK-CLIENT         connected    999        a-full a-100 10/100/1000-TX", "tWarn");
+                tLine("% VLAN mismatch: expected 214, found 999.", "tBad");
+                tLine("Fix it: conf t → interface gi1/0/24 → switchport access vlan 214 → end → write memory", "tInfo");
+              } else {
+                okSound();
+                tLine("Gi1/0/24  NIKK-CLIENT         connected    214        a-full a-100 10/100/1000-TX", "tOk");
+                if (st.sw.saved) promptNext();
+              }
+              setHint(nextHint());
+              return;
+            }
+
+            if (c === "conf t" || c === "configure terminal"){
+              st.mode = "config";
               okSound();
+              tLine("Enter configuration commands, one per line. End with CNTL/Z.", "tDim");
+              setHint(nextHint());
+              return;
+            }
+
+            if (c === "write memory" || c === "wr mem"){
+              if (!st.sw.vlanSet){
+                errorSound();
+                tLine("% BLOCKED: VLAN not fixed yet.", "tWarn");
+                setHint(nextHint());
+                return;
+              }
+              st.sw.saved = true;
+              okSound();
+              tLine("Building configuration... [OK]", "tOk");
               promptNext();
-            }
-            setHint(nextHint());
-            return;
-          }
-
-          if (c.includes("switchport access vlan 214")){
-            st.sw.fixedVlan=true;
-            okSound();
-            tLine("Enter configuration commands, one per line. End with CNTL/Z.", "tDim");
-            tLine("SW-CORE-01(config)# interface Gi1/0/24", "tDim");
-            tLine("SW-CORE-01(config-if)# switchport access vlan 214", "tOk");
-            tLine("SW-CORE-01(config-if)# end", "tDim");
-            tLine("SW-CORE-01# write memory", "tDim");
-            tLine("Building configuration... [OK]", "tOk");
-            promptNext();
-            return;
-          }
-
-          if (c==="next"){
-            if (!st.sw.fixedVlan){
-              errorSound();
-              tLine("% BLOCKED: VLAN still incorrect on Gi1/0/24.", "tWarn");
-              setHint(nextHint());
               return;
             }
-            okSound();
-            st.phase="fw";
-            setDev("FW-EDGE-01 • Perimeter Firewall");
-            tLine("", "tDim");
-            tLine("=== HOP 2/4: FIREWALL ===", "tInfo");
-            tLine("Symptom: TCP/443 dropped at policy enforcement.", "tWarn");
-            setHint(nextHint());
-            return;
-          }
 
-          reject(); return;
-        }
-
-        // firewall
-        if (st.phase==="fw"){
-          if (c.startsWith("packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443")){
-            st.fw.ranPT=true;
-            if (!st.fw.fixedAcl){
-              tLine("Phase: 1  ROUTE-LOOKUP  Result: ALLOW", "tDim");
-              tLine("Phase: 2  ACCESS-LIST   Result: DROP", "tBad");
-              tLine("Drop-reason: (acl-drop) OUTSIDE-IN deny tcp any host 10.13.0.7 eq 443", "tBad");
-              errorSound();
-            } else {
-              tLine("Phase: 1  ROUTE-LOOKUP  Result: ALLOW", "tDim");
-              tLine("Phase: 2  ACCESS-LIST   Result: ALLOW", "tOk");
-              tLine("Result: ALLOW", "tOk");
+            if (c === "next"){
+              if (!(st.sw.sawStatus && st.sw.vlanSet && st.sw.saved)){
+                errorSound();
+                tLine("% BLOCKED: complete switch fix first (VLAN + save).", "tWarn");
+                setHint(nextHint());
+                return;
+              }
               okSound();
-            }
-            setHint(nextHint());
-            return;
-          }
-
-          if (c.includes("access-list outside-in extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443")){
-            st.fw.fixedAcl=true;
-            okSound();
-            tLine("Applied: OUTSIDE-IN permit tcp host 10.214.0.10 host 10.13.0.7 eq 443", "tOk");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c.includes("access-group outside-in in interface outside")){
-            st.fw.appliedGroup=true;
-            okSound();
-            tLine("access-group OUTSIDE-IN in interface outside", "tOk");
-            setHint(nextHint());
-            return;
-          }
-
-          if (c==="write memory" || c==="wr mem"){
-            st.fw.wrote=true;
-            okSound();
-            tLine("Building configuration... [OK]", "tOk");
-            promptNext();
-            return;
-          }
-
-          if (c==="next"){
-            if (!(st.fw.ranPT && st.fw.fixedAcl && st.fw.appliedGroup && st.fw.wrote)){
-              errorSound();
-              tLine("% BLOCKED: firewall steps incomplete.", "tWarn");
+              st.phase = "fw";
+              st.mode = "exec";
+              setDev("FW-EDGE-01 • Perimeter Firewall");
+              tLine("", "tDim");
+              tLine("=== HOP 2/4: FIREWALL ===", "tInfo");
+              tLine("Goal: Allow TCP/443 from 10.214.0.10 to 10.13.0.7.", "tWarn");
+              tLine("Start with: packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443 detailed", "tOk");
               setHint(nextHint());
               return;
             }
-            okSound();
-            st.phase="ise";
-            setDev("ISE-PSN-01 • Cisco ISE (ADE-OS)");
-            tLine("", "tDim");
-            tLine("=== HOP 3/4: ISE ===", "tInfo");
-            tLine("Symptom: auth/authorization may be impacting the flow.", "tWarn");
-            setHint(nextHint());
-            return;
+
+            reject(); return;
           }
 
-          reject(); return;
+          if (st.mode === "config"){
+            if (c === "interface gi1/0/24" || c === "interface gigabitethernet1/0/24"){
+              st.mode = "config-if";
+              okSound();
+              tLine("Entering interface configuration mode.", "tDim");
+              setHint(nextHint());
+              return;
+            }
+            // allow end/exit handled globally
+            reject(); return;
+          }
+
+          if (st.mode === "config-if"){
+            if (c === "switchport access vlan 214"){
+              st.sw.vlanSet = true;
+              okSound();
+              tLine("Set access VLAN 214 on Gi1/0/24.", "tOk");
+              tLine("Now: end → write memory", "tInfo");
+              setHint(nextHint());
+              return;
+            }
+            reject(); return;
+          }
         }
 
-        // ise
-        if (st.phase==="ise"){
-          if (c==="show application status ise"){
-            st.ise.sawApp=true;
+        // FIREWALL phase (ASA-ish)
+        if (st.phase === "fw"){
+          if (st.mode === "exec"){
+            if (c.startsWith("packet-tracer input inside tcp 10.214.0.10 51432 10.13.0.7 443 detailed")){
+              st.fw.ranPT = true;
+              if (!st.fw.aclAdded){
+                errorSound();
+                tLine("Phase: 1  ROUTE-LOOKUP  Result: ALLOW", "tDim");
+                tLine("Phase: 2  ACCESS-LIST   Result: DROP", "tBad");
+                tLine("Drop-reason: (acl-drop) OUTSIDE-IN deny tcp any host 10.13.0.7 eq 443", "tBad");
+                tLine("Fix: conf t → access-list OUTSIDE-IN extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443 → end", "tInfo");
+              } else {
+                okSound();
+                tLine("Phase: 1  ROUTE-LOOKUP  Result: ALLOW", "tDim");
+                tLine("Phase: 2  ACCESS-LIST   Result: ALLOW", "tOk");
+                tLine("Result: ALLOW", "tOk");
+                if (st.fw.agApplied && st.fw.saved) promptNext();
+              }
+              setHint(nextHint());
+              return;
+            }
+
+            if (c === "conf t" || c === "configure terminal"){
+              st.mode = "config";
+              okSound();
+              tLine("Enter configuration commands, one per line. End with CNTL/Z.", "tDim");
+              setHint(nextHint());
+              return;
+            }
+
+            if (c === "write memory" || c === "wr mem"){
+              if (!(st.fw.ranPT && st.fw.aclAdded && st.fw.agApplied)){
+                errorSound();
+                tLine("% BLOCKED: complete ACL + access-group first.", "tWarn");
+                setHint(nextHint());
+                return;
+              }
+              st.fw.saved = true;
+              okSound();
+              tLine("Building configuration... [OK]", "tOk");
+              promptNext();
+              return;
+            }
+
+            if (c === "next"){
+              if (!(st.fw.ranPT && st.fw.aclAdded && st.fw.agApplied && st.fw.saved)){
+                errorSound();
+                tLine("% BLOCKED: firewall steps incomplete.", "tWarn");
+                setHint(nextHint());
+                return;
+              }
+              okSound();
+              st.phase = "ise";
+              st.mode = "exec";
+              setDev("ISE-PSN-01 • Cisco ISE (ADE-OS)");
+              tLine("", "tDim");
+              tLine("=== HOP 3/4: ISE ===", "tInfo");
+              tLine("Goal: Verify authZ status and logs.", "tWarn");
+              tLine("Start with: show application status ise", "tOk");
+              setHint(nextHint());
+              return;
+            }
+
+            reject(); return;
+          }
+
+          if (st.mode === "config"){
+            if (c === "access-list outside-in extended permit tcp host 10.214.0.10 host 10.13.0.7 eq 443"){
+              st.fw.aclAdded = true;
+              okSound();
+              tLine("ACL updated: OUTSIDE-IN permit tcp host 10.214.0.10 host 10.13.0.7 eq 443", "tOk");
+              tLine("Next: access-group OUTSIDE-IN in interface outside", "tInfo");
+              setHint(nextHint());
+              return;
+            }
+            if (c === "access-group outside-in in interface outside"){
+              st.fw.agApplied = true;
+              okSound();
+              tLine("Applied access-group OUTSIDE-IN in interface outside", "tOk");
+              tLine("Now: end → write memory", "tInfo");
+              setHint(nextHint());
+              return;
+            }
+            // end/exit handled globally
+            reject(); return;
+          }
+        }
+
+        // ISE phase (ADE-OS)
+        if (st.phase === "ise"){
+          // ISE is always exec-style for our story
+          if (c === "show application status ise"){
+            st.ise.sawApp = true;
             okSound();
             tLine("ISE PROCESS NAME                       STATE", "tDim");
             tLine("Application Server                     running", "tOk");
@@ -1139,17 +1230,19 @@
             return;
           }
 
-          if (c==="show logging application ise-auth.log tail"){
-            st.ise.sawLogs=true;
+          if (c === "show logging application ise-auth.log tail"){
+            st.ise.sawLogs = true;
             errorSound();
             tLine("tail: ise-auth.log", "tDim");
             tLine("... AuthZ: ACCESS_REJECT (guest quarantine) for user nikkkuuuu", "tBad");
             tLine("... Next: policy updated by change owner (GUI) — pending re-auth", "tWarn");
+            tLine("✅ Action implied: policy fixed in GUI, move on.", "tOk");
             promptNext();
+            setHint(nextHint());
             return;
           }
 
-          if (c==="next"){
+          if (c === "next"){
             if (!(st.ise.sawApp && st.ise.sawLogs)){
               errorSound();
               tLine("% BLOCKED: check app status + auth logs first.", "tWarn");
@@ -1157,11 +1250,13 @@
               return;
             }
             okSound();
-            st.phase="vpn";
+            st.phase = "vpn";
+            st.mode = "exec";
             setDev("VPN-GW-01 • VPN Gateway");
             tLine("", "tDim");
             tLine("=== HOP 4/4: VPN ===", "tInfo");
-            tLine("Symptom: IKE/IPsec state needs verification.", "tWarn");
+            tLine("Goal: Verify IKEv2 SA then clear to renegotiate.", "tWarn");
+            tLine("Start with: show crypto ikev2 sa", "tOk");
             setHint(nextHint());
             return;
           }
@@ -1169,16 +1264,16 @@
           reject(); return;
         }
 
-        // vpn
-        if (st.phase==="vpn"){
-          if (c==="show crypto ikev2 sa"){
-            st.vpn.sawIke=true;
+        // VPN phase (IOS-like)
+        if (st.phase === "vpn"){
+          if (c === "show crypto ikev2 sa"){
+            st.vpn.sawIke = true;
             tLine("IPv4 Crypto IKEv2  SA", "tDim");
             tLine("Tunnel-id Local               Remote              Status", "tDim");
             if (!st.vpn.cleared){
               errorSound();
               tLine("0        10.0.0.1:500         10.0.0.2:500         DOWN", "tBad");
-              tLine("% No active IKEv2 SAs. Clear & renegotiate.", "tWarn");
+              tLine("% Clear and renegotiate: clear crypto ikev2 sa", "tWarn");
             } else {
               okSound();
               tLine("7        10.0.0.1:500         10.0.0.2:500         UP-ACTIVE", "tOk");
@@ -1189,38 +1284,44 @@
             return;
           }
 
-          if (c==="clear crypto ikev2 sa"){
-            st.vpn.cleared=true;
+          if (c === "clear crypto ikev2 sa"){
+            if (!st.vpn.sawIke){
+              errorSound();
+              tLine("% BLOCKED: verify first with 'show crypto ikev2 sa'.", "tWarn");
+              setHint(nextHint());
+              return;
+            }
+            st.vpn.cleared = true;
             okSound();
             tLine("Clearing IKEv2 SAs…", "tDim");
             tLine("Re-negotiation initiated.", "tOk");
-            promptDeliver();
+            tLine("Now re-check: show crypto ikev2 sa", "tInfo");
+            setHint(nextHint());
             return;
           }
 
-          if (c==="deliver"){
+          if (c === "deliver"){
             if (!(st.vpn.sawIke && st.vpn.cleared)){
               errorSound();
-              tLine("% BLOCKED: run 'show crypto ikev2 sa' then 'clear crypto ikev2 sa' first.", "tWarn");
+              tLine("% BLOCKED: do 'show crypto ikev2 sa' + 'clear crypto ikev2 sa' first.", "tWarn");
               setHint(nextHint());
               return;
             }
             okSound();
             tLine("", "tDim");
             tLine("=== DELIVERY ===", "tInfo");
-            tLine("Payload delivered:", "tDim");
-            tLine("“I love you, my forever Valentine, Nikkkuuuu.” 💖", "tOk");
+            tLine("Traffic restored ✅", "tOk");
+            tLine("Payload queued…", "tDim");
+            tLine("Final message: Nikkkuuuu I love you 😘😘", "tOk");
 
-            setTimeout(()=>{
-              termWin.style.display="none";
-              ending.style.display="block";
-              okSound();
-            }, 900);
+            setTimeout(showEnding, 950);
             return;
           }
 
           reject(); return;
         }
+
+        reject();
       }
 
       function runNow(){
@@ -1230,12 +1331,6 @@
       }
       runBtn.addEventListener("click", runNow);
       cmdInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") runNow(); });
-
-      // ---- Start toast ----
-      function boot(){
-        mailTime.textContent = new Date().toLocaleString();
-        setTimeout(()=>{ toast.style.display = "block"; }, 650);
-      }
 
       boot();
     })();
