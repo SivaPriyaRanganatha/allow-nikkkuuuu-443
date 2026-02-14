@@ -1,100 +1,752 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nikkkuuuu Secure Portal</title>
-<style>
-body{
-  margin:0;
-  background:#000;
-  color:#00ff9d;
-  font-family: monospace;
-  padding:20px;
-}
-.terminal{
-  max-width:800px;
-  margin:auto;
-}
-button{
-  background:#00ff9d;
-  border:none;
-  padding:12px;
-  font-weight:bold;
-  margin-top:15px;
-  cursor:pointer;
-  width:100%;
-}
-button:hover{
-  background:#00cc7a;
-}
-@media(max-width:600px){
-  body{font-size:14px;}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Operation: Secure The Heart</title>
+  <style>
+    :root{
+      --bg:#05070b;
+      --panel:rgba(8,12,18,.78);
+      --border:rgba(0,255,157,.22);
+      --text:#b8ffd9;
+      --dim:rgba(184,255,217,.72);
+      --green:#00ff9d;
+      --yellow:#ffd86b;
+      --red:#ff5c7a;
+      --blue:#7dd3fc;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      padding:16px;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(0,255,157,.13), transparent 60%),
+        radial-gradient(900px 500px at 85% 5%, rgba(255,216,107,.08), transparent 60%),
+        radial-gradient(900px 500px at 10% 10%, rgba(125,211,252,.06), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+    .wrap{width:min(1000px, 100%)}
+    .bar{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      background:var(--panel);
+      border-radius:14px;
+      margin-bottom:10px;
+    }
+    .dots{display:flex; gap:6px; align-items:center}
+    .dot{width:10px;height:10px;border-radius:99px}
+    .dot.r{background:var(--red)} .dot.y{background:var(--yellow)} .dot.g{background:var(--green)}
+    .title{font-size:12px; opacity:.9}
+    .badge{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); color:var(--dim)}
+    .grid{display:grid; grid-template-columns: 1.25fr .75fr; gap:10px}
+    @media(max-width:900px){ .grid{grid-template-columns:1fr} }
+
+    .panel{
+      border:1px solid var(--border);
+      background:var(--panel);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .head{
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      color:var(--dim);
+      font-size:12px;
+    }
+    .screen{
+      height:min(64vh,600px);
+      padding:14px 14px 6px;
+      overflow:auto;
+      scroll-behavior:smooth;
+      line-height:1.55;
+      font-size:14px;
+      white-space:pre-wrap;
+    }
+    .line{margin:0 0 6px 0}
+    .dim{color:var(--dim)}
+    .ok{color:var(--green)}
+    .warn{color:var(--yellow)}
+    .bad{color:var(--red)}
+    .info{color:var(--blue)}
+    .prompt{color:rgba(184,255,217,.60)}
+    .cmd{color:var(--text)}
+    .cursor{
+      display:inline-block; width:10px; height:1em;
+      background:var(--green);
+      transform:translateY(2px);
+      margin-left:2px;
+      animation:blink 1s steps(1) infinite;
+    }
+    @keyframes blink{50%{opacity:0}}
+
+    .inputbar{
+      display:flex; gap:10px; padding:10px 12px;
+      border-top:1px solid var(--border);
+      background:rgba(0,0,0,.25);
+    }
+    input{
+      flex:1;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.30);
+      color:var(--green);
+      padding:12px 12px;
+      border-radius:12px;
+      font-size:14px;
+      outline:none;
+    }
+    input::placeholder{color:rgba(0,255,157,.35)}
+    button{
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.28);
+      color:var(--green);
+      padding:12px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      touch-action:manipulation;
+      user-select:none;
+    }
+    button:hover{background:rgba(0,255,157,.10)}
+    .side{
+      border:1px solid var(--border);
+      background:var(--panel);
+      border-radius:18px;
+      padding:12px;
+    }
+    .side h3{
+      margin:0 0 10px;
+      font-size:12px;
+      color:var(--dim);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    .cmds{display:flex; flex-wrap:wrap; gap:10px}
+    .chip{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      font-size:13px;
+      cursor:pointer;
+    }
+    .chip:active{transform:translateY(1px)}
+    .hint{margin-top:10px; font-size:12px; color:var(--dim); line-height:1.45}
+    .actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .allow{
+      background:rgba(0,255,157,.16);
+      border:1px solid rgba(0,255,157,.35);
+    }
+
+    /* DENY dodge */
+    .denyWrap{position:relative; height:44px; min-width:180px}
+    .deny{
+      position:absolute; left:0; top:0;
+      border:1px solid rgba(255,92,122,.45);
+      color:rgba(255,92,122,.95);
+      background:rgba(255,92,122,.08);
+      transition:transform .12s ease;
+      width:100%;
+    }
+
+    @media (max-width:480px){
+      .screen{font-size:13px}
+      button,input{font-size:15px}
+      .denyWrap{min-width:160px}
+    }
+  </style>
 </head>
-
 <body>
-<div class="terminal" id="terminal">
+  <div class="wrap">
+    <div class="bar">
+      <div style="display:flex; gap:10px; align-items:center">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <div class="title">Weston-NOC • Operation Console</div>
+      </div>
+      <div class="badge">Mission: <b>SECURE THE HEART</b></div>
+    </div>
 
-<p>Weston-FW-01# show running-config | include love</p>
-<p>ip access-list extended MY-HEART</p>
-<p> permit tcp host Nikkkuuuu any eq 443</p>
-<p> deny   ip any any</p>
+    <div class="grid">
+      <div class="panel">
+        <div class="head">
+          <div>ssh nikkkuuuu@core-infra</div>
+          <div class="dim" id="deviceLabel">CLASSIFIED • awaiting command…</div>
+        </div>
 
-<br>
+        <div class="screen" id="screen"></div>
 
-<p>ISE-01# show authentication status</p>
-<p> Username: Nikkkuuuu</p>
-<p> Result: <span style="color:#00ff9d">AUTHORIZED</span></p>
+        <div class="inputbar">
+          <input id="cmdInput" placeholder="Type: enable  (or tap a quick command)" autocomplete="off" />
+          <button id="runBtn">Run</button>
+        </div>
+      </div>
 
-<br>
+      <div class="side">
+        <h3>Quick commands</h3>
+        <div class="cmds" id="quickCmds"></div>
 
-<p>VPN-GW# show crypto isakmp sa</p>
-<p> Tunnel Status: <span style="color:#00ff9d">UP</span></p>
-<p> Encryption: AES-FOREVER</p>
+        <div class="actions">
+          <button class="allow" id="allowBtn">✅ APPROVE (ALLOW)</button>
+          <div class="denyWrap">
+            <button class="deny" id="denyBtn">❌ DENY</button>
+          </div>
+        </div>
 
-<br>
-
-<p>SIEM Alert ⚠️</p>
-<p>Severity: CRITICAL</p>
-<p>Description: Excessive heartbeat detected near Nikkkuuuu.</p>
-
-<br>
-
-<p>Nessus Scan Report:</p>
-<p> Vulnerabilities Found: 0</p>
-<p> Risk Level: SAFE TO LOVE</p>
-
-<br>
-
-<p><b>System Query:</b> Will you be my Valentine, Nikkkuuuu? 💘</p>
-
-<button onclick="accept()">ALLOW & COMMIT 💚</button>
-<button onclick="deny()">DENY (blocked by firewall 😏)</button>
-
-</div>
+        <div class="hint" id="hint">
+          Cinematic runbook: begin with <b>enable</b>.  
+          You’ll troubleshoot hop-by-hop: <b>Switch → Firewall → ISE → VPN → Delivery</b>.  
+          Final payload: <b>love packets</b> 😌💘
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
-function accept(){
-document.getElementById("terminal").innerHTML =
-`
-<p>Applying configuration...</p>
-<p>Commit complete.</p>
-<p>Relationship Status: PRODUCTION 🚀</p>
-<p>High Availability: ENABLED</p>
-<p>Failover: NEVER</p>
-<br>
-<p style="font-size:18px;"><b>I love you, my forever Valentine, Nikkkuuuu 💖</b></p>
-`;
-}
+(() => {
+  const screen = document.getElementById('screen');
+  const input = document.getElementById('cmdInput');
+  const runBtn = document.getElementById('runBtn');
+  const quickCmds = document.getElementById('quickCmds');
+  const allowBtn = document.getElementById('allowBtn');
+  const denyBtn = document.getElementById('denyBtn');
+  const deviceLabel = document.getElementById('deviceLabel');
+  const hint = document.getElementById('hint');
 
-function deny(){
-document.getElementById("terminal").innerHTML +=
-`<p style="color:red;">Access Denied.</p>
-<p>Reason: Policy forces ALLOW 😂</p>`;
-}
+  const st = {
+    phase: "intro",           // intro, switch, firewall, ise, vpn, delivered
+    enabled: false,
+    fixedVlan: false,
+    fixedFw: false,
+    fixedIse: false,
+    fixedVpn: false,
+    denyDodges: 0
+  };
+
+  function setDevice(name){
+    deviceLabel.textContent = name;
+  }
+
+  function p(text, cls="line"){
+    const el = document.createElement('p');
+    el.className = `line ${cls}`;
+    el.textContent = text;
+    screen.appendChild(el);
+    screen.scrollTop = screen.scrollHeight;
+  }
+
+  function promptLine(cmd){
+    p(`${currentPrompt()} ${cmd}`, "cmd");
+  }
+
+  function currentPrompt(){
+    if (st.phase === "switch") return "SW-CORE-01#";
+    if (st.phase === "firewall") return "FW-EDGE-01#";
+    if (st.phase === "ise") return "ISE-PSN-01#";
+    if (st.phase === "vpn") return "VPN-GW-01#";
+    if (st.phase === "delivered") return "CHANGE-MGR#";
+    return "CLASSIFIED#";
+  }
+
+  function clearQuick(){
+    quickCmds.innerHTML = "";
+  }
+
+  function addChip(label, cmd){
+    const b = document.createElement('div');
+    b.className = "chip";
+    b.textContent = label;
+    b.addEventListener('click', () => run(cmd));
+    quickCmds.appendChild(b);
+  }
+
+  function refreshQuick(){
+    clearQuick();
+
+    if (!st.enabled){
+      addChip("enable", "enable");
+      addChip("help", "help");
+      addChip("show mission", "show mission");
+      return;
+    }
+
+    if (st.phase === "switch"){
+      addChip("show interface status", "show interface status");
+      addChip("show vlan brief", "show vlan brief");
+      addChip("show mac address-table", "show mac address-table");
+      if (!st.fixedVlan) addChip("fix vlan", "conf t ; interface Gi1/0/24 ; switchport access vlan 214 ; end ; wr mem");
+      addChip("next hop → firewall", "next");
+      return;
+    }
+
+    if (st.phase === "firewall"){
+      addChip("show access-list", "show access-list");
+      addChip("show conn | inc 443", "show conn | inc 443");
+      addChip("packet-tracer", "packet-tracer input inside tcp NIKK 51432 SIVA 443");
+      if (!st.fixedFw) addChip("fix acl allow 443", "fix acl");
+      addChip("next hop → ISE", "next");
+      return;
+    }
+
+    if (st.phase === "ise"){
+      addChip("show live logs", "show live logs");
+      addChip("show auth status", "show authentication status");
+      if (!st.fixedIse) addChip("fix policy (permit)", "fix ise");
+      addChip("next hop → VPN", "next");
+      return;
+    }
+
+    if (st.phase === "vpn"){
+      addChip("show crypto ikev2 sa", "show crypto ikev2 sa");
+      addChip("show crypto ipsec sa", "show crypto ipsec sa");
+      addChip("ping SIVA via tunnel", "ping siva source tunnel0");
+      if (!st.fixedVpn) addChip("rekey / bring tunnel up", "fix vpn");
+      addChip("deliver payload", "deliver");
+      return;
+    }
+
+    if (st.phase === "delivered"){
+      addChip("show packet-capture", "show packet-capture");
+      addChip("replay ending", "replay");
+      return;
+    }
+  }
+
+  function intro(){
+    setDevice("CLASSIFIED • Encrypted Channel Established");
+    p("🌌 OPERATION: SECURE THE HEART 🌌", "info");
+    p("Classified Transmission – Encrypted Channel Established", "dim");
+    p("", "dim");
+    p("23:59 hours.", "dim");
+    p("Production environment.", "dim");
+    p("A single packet leaves Nikkkuuuu’s network.", "dim");
+    p("Its destination… Siva.", "dim");
+    p("", "dim");
+    p("Payload (encrypted):", "dim");
+    p("\"I love you.\"", "ok");
+    p("", "dim");
+    p("But the transmission fails.", "warn");
+    p("Somewhere between the access layer and the edge gateway… the connection is being blocked.", "warn");
+    p("", "dim");
+    p("Traffic Path:", "dim");
+    p("Nikkkuuuu → Switch → Firewall → ISE → VPN Tunnel → Siva", "info");
+    p("", "dim");
+    p("Mission Objective:", "dim");
+    p("Trace the route. Inspect the traffic. Fix the misconfiguration. Establish a secure tunnel.", "dim");
+    p("", "dim");
+    p("👨‍💻 Network Engineer Nikkkuuuu…", "dim");
+    p("The console is waiting.", "dim");
+    p("", "dim");
+    p("Type: enable", "ok");
+    refreshQuick();
+  }
+
+  function movePhase(newPhase){
+    st.phase = newPhase;
+    if (newPhase === "switch"){
+      setDevice("SW-CORE-01 • Access Layer");
+      p("", "dim");
+      p("=== Hop 1/4: SWITCH ===", "info");
+      p("Objective: Confirm VLAN + port state. Love packets must exit access layer.", "dim");
+      p("Hint: show interface status", "dim");
+    }
+    if (newPhase === "firewall"){
+      setDevice("FW-EDGE-01 • Perimeter Firewall");
+      p("", "dim");
+      p("=== Hop 2/4: FIREWALL ===", "info");
+      p("Objective: Inspect policy. TCP/443 must be allowed from Nikkkuuuu → Siva.", "dim");
+      p("Hint: packet-tracer input inside tcp NIKK ... SIVA 443", "dim");
+    }
+    if (newPhase === "ise"){
+      setDevice("ISE-PSN-01 • Policy Enforcement");
+      p("", "dim");
+      p("=== Hop 3/4: ISE ===", "info");
+      p("Objective: Ensure Nikkkuuuu is AUTHORIZED (not ACCESS_REJECT).", "dim");
+      p("Hint: show live logs", "dim");
+    }
+    if (newPhase === "vpn"){
+      setDevice("VPN-GW-01 • Tunnel Gateway");
+      p("", "dim");
+      p("=== Hop 4/4: VPN ===", "info");
+      p("Objective: Bring tunnel UP and deliver payload safely.", "dim");
+      p("Hint: show crypto ikev2 sa", "dim");
+    }
+    if (newPhase === "delivered"){
+      setDevice("CHANGE-MGR • Payload Delivery");
+    }
+    refreshQuick();
+  }
+
+  function normalize(s){
+    return (s||"").trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function run(raw){
+    const cmd = (raw||input.value||"").trim();
+    if (!cmd) return;
+    input.value = "";
+
+    // Support multi commands separated by ;
+    const parts = cmd.split(";").map(s=>s.trim()).filter(Boolean);
+    (async () => {
+      for (const part of parts){
+        await execOne(part);
+      }
+      refreshQuick();
+    })();
+  }
+
+  async function execOne(cmd){
+    const c = normalize(cmd);
+
+    // Global helpers
+    if (c === "help"){
+      promptLine(cmd);
+      p("Available: enable | show mission | next | deliver | (and device-specific show/fix commands)", "dim");
+      return;
+    }
+    if (c === "show mission"){
+      promptLine(cmd);
+      p("Mission: Nikkkuuuu traffic to Siva over TCP/443 is failing.", "dim");
+      p("Fix path: Switch → Firewall → ISE → VPN → Delivery", "dim");
+      return;
+    }
+
+    // Intro
+    if (!st.enabled){
+      if (c === "enable"){
+        promptLine(cmd);
+        p("Entering privileged mode…", "dim");
+        p("Access granted: role=NetworkSecurity | clearance=LOVE-PRIME", "ok");
+        st.enabled = true;
+        movePhase("switch");
+        return;
+      }
+      promptLine(cmd);
+      p("Access denied. Type: enable", "warn");
+      return;
+    }
+
+    // SWITCH phase
+    if (st.phase === "switch"){
+      if (c === "show interface status"){
+        promptLine(cmd);
+        p("Port      Name               Status       Vlan       Duplex Speed Type", "dim");
+        p("Gi1/0/24  NIKK-CLIENT         connected    999        a-full a-100 10/100/1000-TX", st.fixedVlan ? "ok" : "warn");
+        if (!st.fixedVlan){
+          p("⚠️ VLAN mismatch detected. Expected VLAN 214 (VALENTINE). Found VLAN 999 (QUARANTINE).", "warn");
+        } else {
+          p("✅ Port is on VLAN 214. Love packets can leave access layer.", "ok");
+        }
+        return;
+      }
+      if (c === "show vlan brief"){
+        promptLine(cmd);
+        p("VLAN Name                             Status    Ports", "dim");
+        p("214  VALENTINE                         active    ", "ok");
+        p("999  QUARANTINE                        active    Gi1/0/24", st.fixedVlan ? "dim" : "warn");
+        return;
+      }
+      if (c.startsWith("conf t") || c.startsWith("configure terminal") || c.includes("switchport access vlan 214") || c.includes("wr mem")){
+        promptLine(cmd);
+        if (!st.fixedVlan){
+          p("Applying change…", "dim");
+          p("Gi1/0/24 moved: VLAN 999 → VLAN 214", "ok");
+          p("write memory… done", "ok");
+          st.fixedVlan = true;
+        } else {
+          p("No changes required. VLAN already correct.", "dim");
+        }
+        return;
+      }
+      if (c === "fix vlan"){
+        promptLine(cmd);
+        p("Applying change…", "dim");
+        p("interface Gi1/0/24", "dim");
+        p("switchport access vlan 214", "ok");
+        p("write memory… done", "ok");
+        st.fixedVlan = true;
+        return;
+      }
+      if (c === "next"){
+        promptLine(cmd);
+        if (!st.fixedVlan){
+          p("Blocked: You can’t proceed. Fix VLAN first (Gi1/0/24 must be on VLAN 214).", "warn");
+        } else {
+          p("Handoff complete. Forwarding traffic to perimeter…", "ok");
+          movePhase("firewall");
+        }
+        return;
+      }
+
+      promptLine(cmd);
+      p("Unknown command at this hop. Try: show interface status | show vlan brief | fix vlan | next", "dim");
+      return;
+    }
+
+    // FIREWALL phase
+    if (st.phase === "firewall"){
+      if (c === "show access-list"){
+        promptLine(cmd);
+        p("access-list OUTSIDE-IN; 3 elements", "dim");
+        p("1: deny tcp any host SIVA eq 443  (hitcnt=42)", st.fixedFw ? "dim" : "bad");
+        p("2: permit tcp host NIKK any eq 22 (hitcnt=3)", "dim");
+        p("3: deny ip any any (hitcnt=999)", "dim");
+        if (!st.fixedFw) p("❌ Rule 1 is dropping the love packets (443) to Siva.", "bad");
+        else p("✅ 443 is permitted. No drops detected.", "ok");
+        return;
+      }
+      if (c.startsWith("packet-tracer")){
+        promptLine(cmd);
+        if (!st.fixedFw){
+          p("Phase: 1  ROUTE-LOOKUP  ... ALLOW", "dim");
+          p("Phase: 2  ACCESS-LIST   ... DROP", "bad");
+          p("Result: DROP (acl OUTSIDE-IN line 1)", "bad");
+          p("Fix required: permit tcp NIKK → SIVA eq 443", "warn");
+        } else {
+          p("Phase: 1 ROUTE-LOOKUP ... ALLOW", "dim");
+          p("Phase: 2 ACCESS-LIST  ... ALLOW", "ok");
+          p("Result: ALLOW", "ok");
+        }
+        return;
+      }
+      if (c === "show conn | inc 443"){
+        promptLine(cmd);
+        if (!st.fixedFw){
+          p("No entries. Connections to tcp/443 are being dropped.", "warn");
+        } else {
+          p("TCP OUTSIDE  NIKK:51432  SIVA:443  ESTABLISHED", "ok");
+        }
+        return;
+      }
+      if (c === "fix acl"){
+        promptLine(cmd);
+        p("ERROR: specify rule. Try: fix acl allow 443  (or type: fix acl)", "warn");
+        return;
+      }
+      if (c === "fix acl allow 443" || c === "fix acl"){
+        promptLine(cmd);
+        p("Applying policy update…", "dim");
+        p("Removed: deny tcp any host SIVA eq 443", "ok");
+        p("Added:   permit tcp host NIKK host SIVA eq 443", "ok");
+        p("Commit complete.", "ok");
+        st.fixedFw = true;
+        return;
+      }
+      if (c === "next"){
+        promptLine(cmd);
+        if (!st.fixedFw){
+          p("Blocked: 443 still being dropped. Fix ACL first.", "warn");
+        } else {
+          p("Firewall cleared. Passing traffic to policy engine…", "ok");
+          movePhase("ise");
+        }
+        return;
+      }
+
+      promptLine(cmd);
+      p("Unknown command at this hop. Try: show access-list | packet-tracer… | fix acl allow 443 | next", "dim");
+      return;
+    }
+
+    // ISE phase
+    if (st.phase === "ise"){
+      if (c === "show live logs"){
+        promptLine(cmd);
+        if (!st.fixedIse){
+          p("Event 5400 Authentication failed", "bad");
+          p("Failure Reason: 15039 Rejected per authorization profile", "bad");
+          p("Authorization Profile: ACCESS_REJECT", "bad");
+          p("User: nikkkuuuu", "warn");
+          p("Fix required: map Nikkkuuuu → VALENTINE_PERMIT (not QUARANTINE_REJECT).", "warn");
+        } else {
+          p("Event 22037 Authentication succeeded", "ok");
+          p("Authorization Profile: VALENTINE_PERMIT", "ok");
+          p("User: nikkkuuuu", "ok");
+        }
+        return;
+      }
+      if (c === "show authentication status"){
+        promptLine(cmd);
+        if (!st.fixedIse){
+          p("User: nikkkuuuu", "dim");
+          p("Status: REJECTED", "bad");
+          p("Reason: Authorization Profile ACCESS_REJECT selected", "bad");
+        } else {
+          p("User: nikkkuuuu", "dim");
+          p("Status: AUTHORIZED", "ok");
+          p("Profile: VALENTINE_PERMIT", "ok");
+        }
+        return;
+      }
+      if (c === "fix ise"){
+        promptLine(cmd);
+        p("Updating authorization policy…", "dim");
+        p("Rule match updated: nikkkuuuu → VALENTINE_PERMIT", "ok");
+        p("Policy push complete.", "ok");
+        st.fixedIse = true;
+        return;
+      }
+      if (c === "next"){
+        promptLine(cmd);
+        if (!st.fixedIse){
+          p("Blocked: ISE still rejecting. Fix policy first (fix ise).", "warn");
+        } else {
+          p("ISE authorized. Establishing tunnel path…", "ok");
+          movePhase("vpn");
+        }
+        return;
+      }
+
+      promptLine(cmd);
+      p("Unknown command at this hop. Try: show live logs | show authentication status | fix ise | next", "dim");
+      return;
+    }
+
+    // VPN phase
+    if (st.phase === "vpn"){
+      if (c === "show crypto ikev2 sa"){
+        promptLine(cmd);
+        if (!st.fixedVpn){
+          p("Session-id: 0, Status: DOWN", "bad");
+          p("Reason: key exchange pending / missing love key 😏", "warn");
+        } else {
+          p("Session-id: 7, Status: UP-ACTIVE", "ok");
+          p("Encryption: AES-FOREVER  Integrity: HMAC-💚", "ok");
+        }
+        return;
+      }
+      if (c === "show crypto ipsec sa"){
+        promptLine(cmd);
+        if (!st.fixedVpn){
+          p("pkts encaps: 0, pkts decaps: 0", "warn");
+          p("tunnel not passing traffic (SA not established)", "bad");
+        } else {
+          p("pkts encaps: 14, pkts decaps: 14", "ok");
+          p("anti-replay: enabled", "dim");
+        }
+        return;
+      }
+      if (c === "ping siva source tunnel0"){
+        promptLine(cmd);
+        if (!st.fixedVpn){
+          p(".....", "warn");
+          p("Success rate is 0 percent (timeout)", "bad");
+        } else {
+          p("!!!!!", "ok");
+          p("Success rate is 100 percent (5/5)", "ok");
+        }
+        return;
+      }
+      if (c === "fix vpn"){
+        promptLine(cmd);
+        p("Initiating rekey…", "dim");
+        p("Generating: LOVE-KEY (2048-bit)", "ok");
+        p("IKEv2 negotiation… complete", "ok");
+        p("Tunnel0: UP", "ok");
+        st.fixedVpn = true;
+        return;
+      }
+      if (c === "deliver"){
+        promptLine(cmd);
+        if (!st.fixedVpn){
+          p("Blocked: Tunnel is still DOWN. Bring it up first (fix vpn).", "warn");
+        } else {
+          st.phase = "delivered";
+          setDevice("CHANGE-MGR • Payload Delivery");
+          p("", "dim");
+          p("=== DELIVERY ===", "info");
+          p("Capturing traffic on tcp/443 …", "dim");
+          p("Packets in flight…", "dim");
+          p("✅ Traffic delivered to Siva successfully.", "ok");
+          p("", "dim");
+          p("Packet Capture:", "dim");
+          p("SRC: NIKK   DST: SIVA   PROTO: TCP/443   FLAG: PSH,ACK", "ok");
+          p("PAYLOAD:", "dim");
+          p("\"I love you, my forever Valentine, Nikkkuuuu 💖\"", "ok");
+          p("", "dim");
+          p("Status: Production love tunnel established. Failover: NEVER.", "info");
+          p("", "dim");
+          p("Type: show packet-capture  (or click Replay)", "dim");
+          refreshQuick();
+        }
+        return;
+      }
+
+      promptLine(cmd);
+      p("Unknown command at this hop. Try: show crypto ikev2 sa | fix vpn | ping siva source tunnel0 | deliver", "dim");
+      return;
+    }
+
+    // delivered
+    if (st.phase === "delivered"){
+      if (c === "show packet-capture"){
+        promptLine(cmd);
+        p("PCAP Summary:", "dim");
+        p("Frames: 14   Drops: 0   Latency: 0ms (when she smiles)", "ok");
+        p("Final Frame Payload: \"I love you, my forever Valentine, Nikkkuuuu 💖\"", "ok");
+        return;
+      }
+      if (c === "replay"){
+        promptLine(cmd);
+        p("Replaying ending…", "dim");
+        p("✅ Traffic delivered to Siva successfully.", "ok");
+        p("\"I love you, my forever Valentine, Nikkkuuuu 💖\"", "ok");
+        return;
+      }
+      promptLine(cmd);
+      p("Mission complete. You can replay: show packet-capture", "dim");
+      return;
+    }
+  }
+
+  // APPROVE / DENY actions
+  allowBtn.addEventListener('click', () => {
+    p("", "dim");
+    p("CAB APPROVAL RECEIVED ✅", "ok");
+    p("Change ID: ALLOW-NIKKKUUUU-443", "dim");
+    p("Risk: LOW  Impact: HIGH (on heart)", "info");
+    p("Proceeding…", "dim");
+    p("Tip: run through the hops, then type: deliver", "dim");
+  });
+
+  function dodge(){
+    st.denyDodges++;
+    const wrap = denyBtn.parentElement;
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    // pick a random translate within the wrapper
+    const dx = Math.floor((Math.random() * (w - 40)) - (w/2 - 20));
+    const dy = Math.floor((Math.random() * (h - 30)) - (h/2 - 15));
+    denyBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+    if (st.denyDodges === 1) p("❌ DENY attempt detected… evasive manoeuvres engaged 😂", "warn");
+    if (st.denyDodges === 3) p("DENY is not in scope. This change is love-approved only 😏", "warn");
+  }
+
+  // Desktop hover + mobile touch
+  denyBtn.addEventListener('mouseenter', dodge);
+  denyBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, {passive:false});
+  denyBtn.addEventListener('click', () => { dodge(); });
+
+  runBtn.addEventListener('click', () => run());
+  input.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") run();
+  });
+
+  // Boot cinematic intro
+  intro();
+
+  // Default start chips
+  refreshQuick();
+})();
 </script>
-
 </body>
 </html>
