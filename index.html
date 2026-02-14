@@ -7,7 +7,7 @@
   <style>
     :root{
       --bg:#05070b;
-      --panel:rgba(8,12,18,.78);
+      --panel:rgba(8,12,18,.82);
       --border:rgba(0,255,157,.22);
       --text:#b8ffd9;
       --dim:rgba(184,255,217,.72);
@@ -31,7 +31,7 @@
       color:var(--text);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
-    .wrap{width:min(1000px, 100%)}
+    .wrap{width:min(1040px, 100%)}
     .bar{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:10px 12px;
@@ -45,10 +45,10 @@
     .dot.r{background:var(--red)} .dot.y{background:var(--yellow)} .dot.g{background:var(--green)}
     .title{font-size:12px; opacity:.9}
     .badge{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); color:var(--dim)}
-    .grid{display:grid; grid-template-columns: 1.25fr .75fr; gap:10px}
-    @media(max-width:900px){ .grid{grid-template-columns:1fr} }
+    .grid{display:grid; grid-template-columns: 1.3fr .7fr; gap:10px}
+    @media(max-width:920px){ .grid{grid-template-columns:1fr} }
 
-    .panel{
+    .panelBox{
       border:1px solid var(--border);
       background:var(--panel);
       border-radius:18px;
@@ -62,7 +62,7 @@
       font-size:12px;
     }
     .screen{
-      height:min(64vh,600px);
+      height:min(66vh,620px);
       padding:14px 14px 6px;
       overflow:auto;
       scroll-behavior:smooth;
@@ -77,6 +77,15 @@
     .bad{color:var(--red)}
     .info{color:var(--blue)}
     .cmd{color:var(--text)}
+    .kbd{
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(0,255,157,.25);
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      font-size:12px;
+    }
 
     .inputbar{
       display:flex; gap:10px; padding:10px 12px;
@@ -132,39 +141,107 @@
     }
     .chip:active{transform:translateY(1px)}
     .actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .allow{
-      background:rgba(0,255,157,.16);
-      border:1px solid rgba(0,255,157,.35);
+    .hintBtn{
+      background:rgba(125,211,252,.10);
+      border:1px solid rgba(125,211,252,.25);
+      color:rgba(199,241,255,.95);
     }
-
-    /* DENY dodge */
-    .denyWrap{position:relative; height:44px; min-width:180px}
-    .deny{
-      position:absolute; left:0; top:0;
-      border:1px solid rgba(255,92,122,.45);
-      color:rgba(255,92,122,.95);
-      background:rgba(255,92,122,.08);
-      transition:transform .12s ease;
-      width:100%;
-    }
-
-    /* Smart hint area (hidden by default) */
-    .hint{
+    .hintBox{
       display:none;
       margin-top:10px;
       padding:10px 10px;
       border-radius:14px;
-      border:1px solid rgba(255,216,107,.25);
-      background:rgba(255,216,107,.08);
-      color:rgba(255,216,107,.95);
+      border:1px solid rgba(125,211,252,.22);
+      background:rgba(125,211,252,.08);
+      color:rgba(199,241,255,.95);
       font-size:12px;
       line-height:1.45;
     }
 
+    /* --- Ticket / Mail Modal --- */
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.65);
+      display:flex; align-items:center; justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .modal{
+      width:min(640px, 100%);
+      border:1px solid rgba(0,255,157,.25);
+      border-radius:18px;
+      background:rgba(8,12,18,.92);
+      box-shadow:0 25px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(0,255,157,.18);
+      color:var(--dim);
+      font-size:12px;
+    }
+    .mailTag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,216,107,.25);
+      background:rgba(255,216,107,.08);
+      color:rgba(255,216,107,.95);
+      font-weight:800;
+      font-size:12px;
+    }
+    .modalBody{padding:14px}
+    .modalTitle{
+      font-size:18px;
+      color:var(--text);
+      margin:0 0 6px 0;
+      font-weight:900;
+      letter-spacing:.01em;
+    }
+    .modalText{
+      margin:0;
+      color:rgba(184,255,217,.78);
+      font-size:13px;
+      line-height:1.55;
+    }
+    .kv{
+      margin-top:12px;
+      border:1px solid rgba(0,255,157,.18);
+      background:rgba(0,0,0,.25);
+      border-radius:14px;
+      padding:10px;
+      font-size:13px;
+      color:rgba(184,255,217,.82);
+      line-height:1.5;
+    }
+    .kv b{color:var(--text)}
+    .modalActions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding:12px 14px;
+      border-top:1px solid rgba(0,255,157,.18);
+      background:rgba(0,0,0,.22);
+      position:relative;
+      min-height:64px;
+    }
+    .yesBtn{
+      background:rgba(0,255,157,.16);
+      border:1px solid rgba(0,255,157,.35);
+      color:var(--green);
+    }
+    .noWrap{position:relative; width:190px; height:44px}
+    .noBtn{
+      position:absolute; left:0; top:0; width:100%;
+      background:rgba(255,92,122,.10);
+      border:1px solid rgba(255,92,122,.45);
+      color:rgba(255,92,122,.95);
+      transition:transform .12s ease;
+    }
+    .tiny{font-size:12px; color:rgba(184,255,217,.55)}
     @media (max-width:480px){
       .screen{font-size:13px}
       button,input{font-size:15px}
-      .denyWrap{min-width:160px}
+      .noWrap{width:160px}
     }
   </style>
 </head>
@@ -179,17 +256,17 @@
     </div>
 
     <div class="grid">
-      <div class="panel">
+      <div class="panelBox">
         <div class="head">
           <div>ssh nikkkuuuu@core-infra</div>
-          <div class="dim" id="deviceLabel">CLASSIFIED • awaiting command…</div>
+          <div class="dim" id="deviceLabel">WAITING • Ticket assignment required…</div>
         </div>
 
         <div class="screen" id="screen"></div>
 
         <div class="inputbar">
-          <input id="cmdInput" placeholder="Type: enable  (or tap a quick command)" autocomplete="off" />
-          <button id="runBtn">Run</button>
+          <input id="cmdInput" placeholder="(Assign the ticket first) ..." autocomplete="off" disabled />
+          <button id="runBtn" disabled>Run</button>
         </div>
       </div>
 
@@ -198,14 +275,52 @@
         <div class="cmds" id="quickCmds"></div>
 
         <div class="actions">
-          <button class="allow" id="allowBtn">✅ APPROVE (ALLOW)</button>
-          <div class="denyWrap">
-            <button class="deny" id="denyBtn">❌ DENY</button>
-          </div>
+          <button class="hintBtn" id="hintToggle">🛰️ Hints</button>
+        </div>
+        <div class="hintBox" id="hintBox"></div>
+
+        <div style="margin-top:10px" class="tiny">
+          Tip: Commands unlock hop-by-hop after you take the ticket.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mail/Ticket pop-up -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modalHead">
+        <div class="mailTag">📩 NEW INCIDENT EMAIL</div>
+        <div class="dim">Priority: <b class="warn">P1</b></div>
+      </div>
+      <div class="modalBody">
+        <h2 class="modalTitle">Incident: Traffic not reachable (Nikkkuuuu → Siva)</h2>
+        <p class="modalText">
+          A critical encrypted transmission is failing. Love packets on <b>TCP/443</b> are being dropped somewhere between the
+          access layer and the tunnel gateway.
+        </p>
+
+        <div class="kv">
+          <div><b>Incident ID:</b> VAL-0214</div>
+          <div><b>Source:</b> Nikkkuuuu</div>
+          <div><b>Destination:</b> Siva</div>
+          <div><b>Impact:</b> Heartbeat latency rising • Emotional SLA breached</div>
+          <div><b>Path:</b> Switch → Firewall → ISE → VPN → Delivery</div>
         </div>
 
-        <!-- Smart hints only show when needed -->
-        <div class="hint" id="hint"></div>
+        <p class="modalText" style="margin-top:12px">
+          Assign this ticket to <b>your name</b> to begin troubleshooting.
+        </p>
+      </div>
+
+      <div class="modalActions">
+        <button class="yesBtn" id="assignYes">✅ Yes, assign to me</button>
+
+        <div class="noWrap">
+          <button class="noBtn" id="assignNo">❌ No</button>
+        </div>
+
+        <div class="tiny" id="noCounter" style="margin-left:auto; align-self:center;"></div>
       </div>
     </div>
   </div>
@@ -216,43 +331,30 @@
   const input = document.getElementById('cmdInput');
   const runBtn = document.getElementById('runBtn');
   const quickCmds = document.getElementById('quickCmds');
-  const allowBtn = document.getElementById('allowBtn');
-  const denyBtn = document.getElementById('denyBtn');
   const deviceLabel = document.getElementById('deviceLabel');
-  const hintBox = document.getElementById('hint');
 
-  // --- smart hint system (hidden by default)
-  let hintTimer = null;
-  function clearHint(){
-    if (hintTimer) clearTimeout(hintTimer);
-    hintTimer = null;
-    hintBox.style.display = "none";
-    hintBox.textContent = "";
-  }
-  function showHint(message){
-    if (hintTimer) clearTimeout(hintTimer);
-    hintTimer = null;
-    hintBox.textContent = "🛰️ Intel: " + message;
-    hintBox.style.display = "block";
-  }
-  function scheduleHint(message, delay=7000){
-    clearHint();
-    hintTimer = setTimeout(() => showHint(message), delay);
-  }
+  const overlay = document.getElementById('overlay');
+  const assignYes = document.getElementById('assignYes');
+  const assignNo = document.getElementById('assignNo');
+  const noCounter = document.getElementById('noCounter');
+
+  const hintToggle = document.getElementById('hintToggle');
+  const hintBox = document.getElementById('hintBox');
 
   const st = {
-    phase: "intro",           // intro, switch, firewall, ise, vpn, delivered
-    enabled: false,
-    fixedVlan: false,
-    fixedFw: false,
-    fixedIse: false,
-    fixedVpn: false,
-    denyDodges: 0
+    ticketAssigned:false,
+    enabled:false,
+    phase:"intro", // intro->switch->firewall->ise->vpn->delivered
+    fixedVlan:false,
+    fixedFw:false,
+    fixedIse:false,
+    fixedVpn:false,
+    noMoves:0,
+    hintVisible:false,
+    currentHint:""
   };
 
-  function setDevice(name){
-    deviceLabel.textContent = name;
-  }
+  function setDevice(name){ deviceLabel.textContent = name; }
 
   function p(text, cls="line"){
     const el = document.createElement('p');
@@ -260,10 +362,6 @@
     el.textContent = text;
     screen.appendChild(el);
     screen.scrollTop = screen.scrollHeight;
-  }
-
-  function promptLine(cmd){
-    p(`${currentPrompt()} ${cmd}`, "cmd");
   }
 
   function currentPrompt(){
@@ -275,26 +373,55 @@
     return "CLASSIFIED#";
   }
 
-  function clearQuick(){ quickCmds.innerHTML = ""; }
+  function promptLine(cmd){ p(`${currentPrompt()} ${cmd}`, "cmd"); }
 
+  function normalize(s){ return (s||"").trim().toLowerCase().replace(/\s+/g,' '); }
+
+  function clearQuick(){ quickCmds.innerHTML=""; }
   function addChip(label, cmd){
     const b = document.createElement('div');
-    b.className = "chip";
-    b.textContent = label;
+    b.className="chip";
+    b.textContent=label;
     b.addEventListener('click', () => run(cmd));
     quickCmds.appendChild(b);
   }
 
+  // HINTS: only show if user clicks the button
+  function setHint(message){
+    st.currentHint = message || "";
+    if (!st.hintVisible) return;
+    hintBox.textContent = st.currentHint ? ("🛰️ Intel: " + st.currentHint) : "";
+    hintBox.style.display = st.currentHint ? "block" : "none";
+  }
+  function toggleHints(){
+    st.hintVisible = !st.hintVisible;
+    if (st.hintVisible && st.currentHint){
+      hintBox.textContent = "🛰️ Intel: " + st.currentHint;
+      hintBox.style.display = "block";
+    } else {
+      hintBox.style.display = "none";
+      hintBox.textContent = "";
+    }
+  }
+  hintToggle.addEventListener('click', toggleHints);
+
   function refreshQuick(){
     clearQuick();
 
+    // Before ticket assignment: nothing
+    if (!st.ticketAssigned){
+      addChip("Read email", "help");
+      return;
+    }
+
+    // After ticket, before enable
     if (!st.enabled){
       addChip("enable", "enable");
-      addChip("help", "help");
       addChip("show mission", "show mission");
       return;
     }
 
+    // Progressive commands (not all at once)
     if (st.phase === "switch"){
       addChip("show interface status", "show interface status");
       addChip("show vlan brief", "show vlan brief");
@@ -302,7 +429,6 @@
       addChip("next → firewall", "next");
       return;
     }
-
     if (st.phase === "firewall"){
       addChip("show access-list", "show access-list");
       addChip("packet-tracer", "packet-tracer input inside tcp NIKK 51432 SIVA 443");
@@ -310,7 +436,6 @@
       addChip("next → ISE", "next");
       return;
     }
-
     if (st.phase === "ise"){
       addChip("show live logs", "show live logs");
       addChip("show auth status", "show authentication status");
@@ -318,7 +443,6 @@
       addChip("next → VPN", "next");
       return;
     }
-
     if (st.phase === "vpn"){
       addChip("show crypto ikev2 sa", "show crypto ikev2 sa");
       addChip("ping SIVA via tunnel", "ping siva source tunnel0");
@@ -326,7 +450,6 @@
       addChip("deliver payload", "deliver");
       return;
     }
-
     if (st.phase === "delivered"){
       addChip("show packet-capture", "show packet-capture");
       addChip("replay ending", "replay");
@@ -334,86 +457,69 @@
     }
   }
 
-  function intro(){
-    setDevice("CLASSIFIED • Encrypted Channel Established");
+  function cinematicIntro(){
+    setDevice("WAITING • Ticket assignment required…");
     p("🌌 OPERATION: SECURE THE HEART 🌌", "info");
-    p("Classified Transmission – Encrypted Channel Established", "dim");
+    p("An encrypted transmission attempts to cross the network.", "dim");
+    p("Source: Nikkkuuuu  →  Destination: Siva", "dim");
+    p("Protocol: TCP/443", "dim");
     p("", "dim");
-    p("23:59 hours. Production environment.", "dim");
-    p("A single packet leaves Nikkkuuuu’s network.", "dim");
-    p("Its destination… Siva.", "dim");
+    p("But the traffic is not reachable.", "warn");
+    p("A P1 incident has been raised.", "warn");
     p("", "dim");
-    p("Payload (encrypted):", "dim");
-    p("\"I love you.\"", "ok");
-    p("", "dim");
-    p("But the transmission fails.", "warn");
-    p("Somewhere between the access layer and the edge gateway… the connection is being blocked.", "warn");
-    p("", "dim");
-    p("Traffic Path:", "dim");
-    p("Nikkkuuuu → Switch → Firewall → ISE → VPN Tunnel → Siva", "info");
-    p("", "dim");
-    p("👨‍💻 Network Engineer Nikkkuuuu…", "dim");
-    p("Type: enable", "ok");
+    p("Action required: assign ticket to begin.", "ok");
+    setHint("Click “✅ Yes, assign to me” in the email to start.");
     refreshQuick();
-    clearHint();
-    scheduleHint("Start by typing `enable` to enter privileged mode.", 6000);
   }
 
   function movePhase(newPhase){
     st.phase = newPhase;
-    clearHint();
 
     if (newPhase === "switch"){
       setDevice("SW-CORE-01 • Access Layer");
       p("", "dim");
       p("=== Hop 1/4: SWITCH ===", "info");
-      p("Objective: Confirm VLAN + port state. Love packets must exit access layer.", "dim");
-      scheduleHint("Try `show interface status` to check VLAN/port state.", 6500);
+      p("Goal: get Nikkkuuuu traffic out of QUARANTINE and into VALENTINE VLAN.", "dim");
+      setHint("Try `show interface status` then fix VLAN if needed.");
     }
     if (newPhase === "firewall"){
       setDevice("FW-EDGE-01 • Perimeter Firewall");
       p("", "dim");
       p("=== Hop 2/4: FIREWALL ===", "info");
-      p("Objective: Inspect policy. TCP/443 must be allowed from Nikkkuuuu → Siva.", "dim");
-      scheduleHint("Use `packet-tracer` or `show access-list` to find the drop.", 6500);
+      p("Goal: allow TCP/443 from Nikkkuuuu → Siva.", "dim");
+      setHint("Use `packet-tracer` or `show access-list` to find the DROP.");
     }
     if (newPhase === "ise"){
       setDevice("ISE-PSN-01 • Policy Enforcement");
       p("", "dim");
       p("=== Hop 3/4: ISE ===", "info");
-      p("Objective: Ensure Nikkkuuuu is AUTHORIZED (not ACCESS_REJECT).", "dim");
-      scheduleHint("Run `show live logs` to see why auth is failing.", 6500);
+      p("Goal: AUTHORIZED (no ACCESS_REJECT).", "dim");
+      setHint("Run `show live logs` then apply `fix ise`.");
     }
     if (newPhase === "vpn"){
       setDevice("VPN-GW-01 • Tunnel Gateway");
       p("", "dim");
       p("=== Hop 4/4: VPN ===", "info");
-      p("Objective: Bring tunnel UP and deliver payload safely.", "dim");
-      scheduleHint("Run `show crypto ikev2 sa` to check tunnel state.", 6500);
+      p("Goal: bring tunnel UP and pass packets.", "dim");
+      setHint("Check `show crypto ikev2 sa`, then run `fix vpn`.");
     }
     if (newPhase === "delivered"){
       setDevice("CHANGE-MGR • Payload Delivery");
-      clearHint();
+      setHint("Mission complete. 🖤");
     }
-
     refreshQuick();
   }
 
-  function normalize(s){
-    return (s||"").trim().toLowerCase().replace(/\s+/g,' ');
-  }
-
+  // RUN COMMANDS
   function run(raw){
-    clearHint(); // hide hints once he acts
+    if (!st.ticketAssigned) return;
     const cmd = (raw||input.value||"").trim();
     if (!cmd) return;
     input.value = "";
 
     const parts = cmd.split(";").map(s=>s.trim()).filter(Boolean);
     (async () => {
-      for (const part of parts){
-        await execOne(part);
-      }
+      for (const part of parts) await execOne(part);
       refreshQuick();
     })();
   }
@@ -421,21 +527,19 @@
   async function execOne(cmd){
     const c = normalize(cmd);
 
-    // Global helpers
     if (c === "help"){
       promptLine(cmd);
-      p("Available: enable | show mission | next | deliver | device-specific show/fix commands", "dim");
-      scheduleHint("Use the quick commands on the right if you don’t want to type.", 6500);
-      return;
-    }
-    if (c === "show mission"){
-      promptLine(cmd);
-      p("Mission: Nikkkuuuu traffic to Siva over TCP/443 is failing.", "dim");
-      p("Fix path: Switch → Firewall → ISE → VPN → Delivery", "dim");
+      p("A P1 incident email is waiting. Assign the ticket to proceed.", "dim");
       return;
     }
 
-    // Intro
+    if (!st.ticketAssigned){
+      promptLine(cmd);
+      p("Blocked: ticket not assigned.", "warn");
+      return;
+    }
+
+    // Before enable
     if (!st.enabled){
       if (c === "enable"){
         promptLine(cmd);
@@ -445,23 +549,29 @@
         movePhase("switch");
         return;
       }
+      if (c === "show mission"){
+        promptLine(cmd);
+        p("Mission: Restore TCP/443 reachability from Nikkkuuuu → Siva.", "dim");
+        p("Path: Switch → Firewall → ISE → VPN → Delivery", "dim");
+        return;
+      }
       promptLine(cmd);
       p("Access denied. Type: enable", "warn");
-      showHint("Type `enable` first.");
+      setHint("Type `enable` (or tap it on the right).");
       return;
     }
 
-    // SWITCH phase
+    // SWITCH
     if (st.phase === "switch"){
       if (c === "show interface status"){
         promptLine(cmd);
         p("Port      Name               Status       Vlan       Duplex Speed Type", "dim");
         p("Gi1/0/24  NIKK-CLIENT         connected    999        a-full a-100 10/100/1000-TX", st.fixedVlan ? "ok" : "warn");
         if (!st.fixedVlan){
-          p("⚠️ VLAN mismatch. Expected VLAN 214 (VALENTINE). Found VLAN 999 (QUARANTINE).", "warn");
-          showHint("Fix it by running the quick command `fix vlan`.");
+          p("⚠️ VLAN mismatch: expected 214 (VALENTINE). found 999 (QUARANTINE).", "warn");
+          setHint("Run `fix vlan` (quick command) to move Gi1/0/24 to VLAN 214.");
         } else {
-          p("✅ Port is on VLAN 214. Love packets can leave the access layer.", "ok");
+          p("✅ VLAN 214 verified. Switching path is clean.", "ok");
         }
         return;
       }
@@ -470,40 +580,40 @@
         p("VLAN Name                             Status    Ports", "dim");
         p("214  VALENTINE                         active", "ok");
         p("999  QUARANTINE                        active    Gi1/0/24", st.fixedVlan ? "dim" : "warn");
-        if (!st.fixedVlan) showHint("Move Gi1/0/24 to VLAN 214 (use `fix vlan`).");
+        if (!st.fixedVlan) setHint("Move Gi1/0/24 off QUARANTINE into VALENTINE VLAN 214.");
         return;
       }
-      if (c.startsWith("conf t") || c.startsWith("configure terminal") || c.includes("switchport access vlan 214") || c.includes("wr mem")){
+      if (c.startsWith("conf t") || c.includes("switchport access vlan 214") || c.includes("wr mem")){
         promptLine(cmd);
         if (!st.fixedVlan){
           p("Applying change…", "dim");
           p("Gi1/0/24 moved: VLAN 999 → VLAN 214", "ok");
           p("write memory… done", "ok");
           st.fixedVlan = true;
+          p("✅ Hop cleared. Forwarding to perimeter is now possible.", "ok");
         } else {
-          p("No changes required. VLAN already correct.", "dim");
+          p("No changes required.", "dim");
         }
         return;
       }
       if (c === "next"){
         promptLine(cmd);
         if (!st.fixedVlan){
-          p("Blocked: fix VLAN first (Gi1/0/24 must be on VLAN 214).", "warn");
-          showHint("Run `show interface status` then `fix vlan`.");
+          p("Blocked: traffic still quarantined. Fix VLAN first.", "warn");
+          setHint("Check `show interface status` then run `fix vlan`.");
         } else {
-          p("Handoff complete. Forwarding traffic to perimeter…", "ok");
+          p("Forwarding traffic → Firewall…", "ok");
           movePhase("firewall");
         }
         return;
       }
-
       promptLine(cmd);
       p("Unknown command.", "warn");
-      scheduleHint("Try `show interface status` (then fix VLAN if needed).", 3000);
+      setHint("Try `show interface status`.");
       return;
     }
 
-    // FIREWALL phase
+    // FIREWALL
     if (st.phase === "firewall"){
       if (c === "show access-list"){
         promptLine(cmd);
@@ -512,23 +622,23 @@
         p("2: permit tcp host NIKK any eq 22 (hitcnt=3)", "dim");
         p("3: deny ip any any (hitcnt=999)", "dim");
         if (!st.fixedFw){
-          p("❌ Rule 1 is dropping tcp/443 to Siva.", "bad");
-          showHint("Add permit for NIKK → SIVA eq 443 using `fix acl allow 443`.");
+          p("❌ tcp/443 to Siva is being dropped.", "bad");
+          setHint("Run `fix acl allow 443`.");
         } else {
-          p("✅ 443 is permitted. No drops detected.", "ok");
+          p("✅ Policy clean. 443 permitted.", "ok");
         }
         return;
       }
       if (c.startsWith("packet-tracer")){
         promptLine(cmd);
         if (!st.fixedFw){
-          p("Phase: 1  ROUTE-LOOKUP  ... ALLOW", "dim");
-          p("Phase: 2  ACCESS-LIST   ... DROP", "bad");
-          p("Result: DROP (acl OUTSIDE-IN line 1)", "bad");
-          showHint("Fix ACL: permit tcp NIKK → SIVA eq 443 (use `fix acl allow 443`).");
+          p("Phase: 1 ROUTE-LOOKUP … ALLOW", "dim");
+          p("Phase: 2 ACCESS-LIST  … DROP", "bad");
+          p("Result: DROP (OUTSIDE-IN line 1)", "bad");
+          setHint("Fix ACL to permit NIKK → SIVA on TCP/443.");
         } else {
-          p("Phase: 1 ROUTE-LOOKUP ... ALLOW", "dim");
-          p("Phase: 2 ACCESS-LIST  ... ALLOW", "ok");
+          p("Phase: 1 ROUTE-LOOKUP … ALLOW", "dim");
+          p("Phase: 2 ACCESS-LIST  … ALLOW", "ok");
           p("Result: ALLOW", "ok");
         }
         return;
@@ -540,27 +650,27 @@
         p("Added:   permit tcp host NIKK host SIVA eq 443", "ok");
         p("Commit complete.", "ok");
         st.fixedFw = true;
+        p("✅ Hop cleared. Traffic may proceed to policy engine.", "ok");
         return;
       }
       if (c === "next"){
         promptLine(cmd);
         if (!st.fixedFw){
-          p("Blocked: 443 still being dropped. Fix ACL first.", "warn");
-          showHint("Run `show access-list` then `fix acl allow 443`.");
+          p("Blocked: firewall still dropping TCP/443.", "warn");
+          setHint("Run `show access-list` then `fix acl allow 443`.");
         } else {
-          p("Firewall cleared. Passing traffic to policy engine…", "ok");
+          p("Forwarding traffic → ISE…", "ok");
           movePhase("ise");
         }
         return;
       }
-
       promptLine(cmd);
       p("Unknown command.", "warn");
-      scheduleHint("Try `show access-list` or `packet-tracer`.", 3000);
+      setHint("Try `show access-list` or `packet-tracer`.");
       return;
     }
 
-    // ISE phase
+    // ISE
     if (st.phase === "ise"){
       if (c === "show live logs"){
         promptLine(cmd);
@@ -569,7 +679,7 @@
           p("Failure Reason: 15039 Rejected per authorization profile", "bad");
           p("Authorization Profile: ACCESS_REJECT", "bad");
           p("User: nikkkuuuu", "warn");
-          showHint("Fix policy mapping so nikkkuuuu matches VALENTINE_PERMIT (use `fix ise`).");
+          setHint("Apply `fix ise` to map user to VALENTINE_PERMIT.");
         } else {
           p("Event 22037 Authentication succeeded", "ok");
           p("Authorization Profile: VALENTINE_PERMIT", "ok");
@@ -582,7 +692,7 @@
         if (!st.fixedIse){
           p("User: nikkkuuuu", "dim");
           p("Status: REJECTED (ACCESS_REJECT)", "bad");
-          showHint("Run `fix ise` to allow him in 😏");
+          setHint("Run `fix ise`.");
         } else {
           p("User: nikkkuuuu", "dim");
           p("Status: AUTHORIZED", "ok");
@@ -593,37 +703,37 @@
       if (c === "fix ise"){
         promptLine(cmd);
         p("Updating authorization policy…", "dim");
-        p("Rule match updated: nikkkuuuu → VALENTINE_PERMIT", "ok");
+        p("Rule updated: nikkkuuuu → VALENTINE_PERMIT", "ok");
         p("Policy push complete.", "ok");
         st.fixedIse = true;
+        p("✅ Hop cleared. Proceed to tunnel gateway.", "ok");
         return;
       }
       if (c === "next"){
         promptLine(cmd);
         if (!st.fixedIse){
-          p("Blocked: ISE still rejecting. Fix policy first.", "warn");
-          showHint("Run `show live logs` then `fix ise`.");
+          p("Blocked: ISE still rejecting.", "warn");
+          setHint("Run `show live logs` then `fix ise`.");
         } else {
-          p("ISE authorized. Establishing tunnel path…", "ok");
+          p("Forwarding traffic → VPN Gateway…", "ok");
           movePhase("vpn");
         }
         return;
       }
-
       promptLine(cmd);
       p("Unknown command.", "warn");
-      scheduleHint("Try `show live logs` or `show authentication status`.", 3000);
+      setHint("Try `show live logs`.");
       return;
     }
 
-    // VPN phase
+    // VPN
     if (st.phase === "vpn"){
       if (c === "show crypto ikev2 sa"){
         promptLine(cmd);
         if (!st.fixedVpn){
           p("Session-id: 0, Status: DOWN", "bad");
-          p("Reason: key exchange pending / missing love key 😏", "warn");
-          showHint("Bring the tunnel up using `fix vpn`.");
+          p("Reason: key exchange pending", "warn");
+          setHint("Run `fix vpn` to bring the tunnel UP.");
         } else {
           p("Session-id: 7, Status: UP-ACTIVE", "ok");
           p("Encryption: AES-FOREVER  Integrity: HMAC-💚", "ok");
@@ -635,7 +745,7 @@
         if (!st.fixedVpn){
           p(".....", "warn");
           p("Success rate is 0 percent (timeout)", "bad");
-          showHint("Tunnel is down — run `fix vpn` then ping again.");
+          setHint("Tunnel is down—run `fix vpn`, then ping again.");
         } else {
           p("!!!!!", "ok");
           p("Success rate is 100 percent (5/5)", "ok");
@@ -649,20 +759,20 @@
         p("IKEv2 negotiation… complete", "ok");
         p("Tunnel0: UP", "ok");
         st.fixedVpn = true;
+        p("✅ Tunnel established. Ready to deliver payload.", "ok");
         return;
       }
       if (c === "deliver"){
         promptLine(cmd);
         if (!st.fixedVpn){
-          p("Blocked: Tunnel is still DOWN. Bring it up first.", "warn");
-          showHint("Run `show crypto ikev2 sa` then `fix vpn`.");
+          p("Blocked: tunnel still DOWN.", "warn");
+          setHint("Run `show crypto ikev2 sa` then `fix vpn`.");
         } else {
           st.phase = "delivered";
           setDevice("CHANGE-MGR • Payload Delivery");
-          clearHint();
           p("", "dim");
           p("=== DELIVERY ===", "info");
-          p("Capturing traffic on tcp/443 …", "dim");
+          p("Capturing traffic on TCP/443 …", "dim");
           p("Packets in flight…", "dim");
           p("✅ Traffic delivered to Siva successfully.", "ok");
           p("", "dim");
@@ -672,20 +782,18 @@
           p("\"I love you, my forever Valentine, Nikkkuuuu 💖\"", "ok");
           p("", "dim");
           p("Status: Production love tunnel established. Failover: NEVER.", "info");
-          p("", "dim");
-          p("Type: show packet-capture", "dim");
           refreshQuick();
+          setHint("Optional: run `show packet-capture`.");
         }
         return;
       }
-
       promptLine(cmd);
       p("Unknown command.", "warn");
-      scheduleHint("Try `show crypto ikev2 sa` then `fix vpn`, then `deliver`.", 3000);
+      setHint("Try `show crypto ikev2 sa`.");
       return;
     }
 
-    // delivered
+    // Delivered
     if (st.phase === "delivered"){
       if (c === "show packet-capture"){
         promptLine(cmd);
@@ -694,7 +802,7 @@
         p("Final Payload: \"I love you, my forever Valentine, Nikkkuuuu 💖\"", "ok");
         return;
       }
-      if (c === "replay"){
+      if (c === "replay ending" || c === "replay"){
         promptLine(cmd);
         p("Replaying ending…", "dim");
         p("✅ Traffic delivered to Siva successfully.", "ok");
@@ -702,43 +810,64 @@
         return;
       }
       promptLine(cmd);
-      p("Mission complete. Try: show packet-capture", "dim");
+      p("Mission complete.", "dim");
       return;
     }
   }
 
-  // APPROVE / DENY actions
-  allowBtn.addEventListener('click', () => {
-    p("", "dim");
-    p("CAB APPROVAL RECEIVED ✅", "ok");
-    p("Change ID: ALLOW-NIKKKUUUU-443", "dim");
-    p("Proceeding…", "dim");
-    scheduleHint("Start with `enable` if you haven't already.", 3500);
-  });
-
-  function dodge(){
-    st.denyDodges++;
-    const wrap = denyBtn.parentElement;
+  // Ticket assignment YES/NO behavior
+  function moveNo(){
+    st.noMoves++;
+    noCounter.textContent = `Nice try 😏 (${st.noMoves}/5)`;
+    const wrap = assignNo.parentElement;
     const w = wrap.clientWidth;
     const h = wrap.clientHeight;
-    const dx = Math.floor((Math.random() * (w - 40)) - (w/2 - 20));
-    const dy = Math.floor((Math.random() * (h - 30)) - (h/2 - 15));
-    denyBtn.style.transform = `translate(${dx}px, ${dy}px)`;
-    if (st.denyDodges === 1) p("❌ DENY attempt detected… evasive manoeuvres engaged 😂", "warn");
-    if (st.denyDodges === 3) p("DENY is out of scope. This change is love-approved only 😏", "warn");
-    showHint("Nice try 😌 You must restore traffic.");
+    const dx = Math.floor((Math.random() * (w - 44)) - (w/2 - 22));
+    const dy = Math.floor((Math.random() * (h - 34)) - (h/2 - 17));
+    assignNo.style.transform = `translate(${dx}px, ${dy}px)`;
+
+    if (st.noMoves === 1) {
+      // little sass in the terminal too
+      p("Incoming email opened…", "dim");
+      p("Attempted action: DENY ticket assignment", "warn");
+      p("Response: Nice try. You can’t escape this mission 😌", "warn");
+    }
+
+    if (st.noMoves >= 5){
+      // disappear no button
+      assignNo.style.display = "none";
+      noCounter.textContent = "No option removed ✅";
+    }
   }
 
-  denyBtn.addEventListener('mouseenter', dodge);
-  denyBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, {passive:false});
-  denyBtn.addEventListener('click', () => { dodge(); });
+  // Desktop + mobile
+  assignNo.addEventListener('mouseenter', moveNo);
+  assignNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); }, {passive:false});
+  assignNo.addEventListener('click', (e) => { e.preventDefault(); moveNo(); });
 
+  assignYes.addEventListener('click', () => {
+    overlay.style.display = "none";
+    st.ticketAssigned = true;
+    input.disabled = false;
+    runBtn.disabled = false;
+
+    setDevice("CLASSIFIED • Ticket assigned to Nikkkuuuu");
+    p("", "dim");
+    p("✅ Ticket assigned to: Nikkkuuuu", "ok");
+    p("Status: IN PROGRESS", "info");
+    p("Objective: Restore reachability (TCP/443) from Nikkkuuuu → Siva", "dim");
+    p("", "dim");
+    p("Type: enable", "ok");
+    setHint("Start by typing `enable` (or tap it on the right).");
+    refreshQuick();
+  });
+
+  // Run events
   runBtn.addEventListener('click', () => run());
   input.addEventListener('keydown', (e) => { if (e.key === "Enter") run(); });
 
-  // Boot intro
-  intro();
-  refreshQuick();
+  // Boot
+  cinematicIntro();
 })();
 </script>
 </body>
